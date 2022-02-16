@@ -1,0 +1,48 @@
+{
+  "terraform": [
+    {
+      "required_providers": [
+        {
+          "aws": {
+            "source": "hashicorp/aws",
+            "version": ">= 2.7.0"
+          }
+        }
+      ]
+    }
+  ],
+  "provider": [
+    {
+      "aws": [
+        {
+          "region": "us-west-2"
+        }
+      ]
+    }
+  ],
+  "resource": [
+    {
+      "aws_s3_bucket": [
+        {
+          "terraform_backend_bucket": [
+            {
+              "bucket": "terraform-state-syw27gk7b9kjpwz9y67h27i23a5tf5nrtei6sawwq0t0q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_instance": [
+        {
+          "Test": [
+            {
+              "ami": "ami-0892d3c7ee96c0bf7",
+              "instance_type": "t2.medium"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
