@@ -26,7 +26,7 @@
         {
           "terraform_backend_bucket": [
             {
-              "bucket": "terraform-state-dwu04i5b0p5v4s1v2t7b670v1mp1rptd3ik1gw567hdul"
+              "bucket": "terraform-state-bavolebya3yjucb2imbkf1jnre4yqz63fq1hz6rru8ppm"
             }
           ]
         }
@@ -35,10 +35,10 @@
     {
       "aws_instance": [
         {
-          "test": [
+          "asdf": [
             {
               "ami": "ami-0892d3c7ee96c0bf7",
-              "instance_type": "t2.medium"
+              "instance_type": "t2.small"
             }
           ]
         }
@@ -48,9 +48,9 @@
       {
         "aws_iam_user": [
           {
-            "test_iam": [
+            "asdf_iam": [
               {
-                "name": "test_iam"
+                "name": "asdf_iam"
               }
             ]
           }
@@ -59,10 +59,10 @@
       {
         "aws_iam_user_policy_attachment": [
           {
-            "test_iam_policy_attachment0": [
+            "asdf_iam_policy_attachment0": [
               {
-                "user": "${aws_iam_user.test_iam.name}",
-                "policy_arn": "${aws_iam_policy.test_policy_document.arn}"
+                "user": "${aws_iam_user.asdf_iam.name}",
+                "policy_arn": "${aws_iam_policy.asdf_policy_document.arn}"
               }
             ]
           }
@@ -71,57 +71,9 @@
       {
         "aws_iam_access_key": [
           {
-            "test_iam_access_key": [
+            "asdf_iam_access_key": [
               {
-                "user": "${aws_iam_user.test_iam.name}"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    {
-      "aws_instance": [
-        {
-          "test": [
-            {
-              "ami": "ami-0892d3c7ee96c0bf7",
-              "instance_type": "t2.medium"
-            }
-          ]
-        }
-      ]
-    },
-    [
-      {
-        "aws_iam_user": [
-          {
-            "test_iam": [
-              {
-                "name": "test_iam"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "aws_iam_user_policy_attachment": [
-          {
-            "test_iam_policy_attachment0": [
-              {
-                "user": "${aws_iam_user.test_iam.name}",
-                "policy_arn": "${aws_iam_policy.test_policy_document.arn}"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "aws_iam_access_key": [
-          {
-            "test_iam_access_key": [
-              {
-                "user": "${aws_iam_user.test_iam.name}"
+                "user": "${aws_iam_user.asdf_iam.name}"
               }
             ]
           }
@@ -133,7 +85,7 @@
     {
       "aws_iam_policy_document": [
         {
-          "test_policy_document": [
+          "asdf_policy_document": [
             {
               "statement": [
                 {
@@ -153,39 +105,7 @@
                   ],
                   "effect": "Allow",
                   "resources": [
-                    "${aws_instance.test.arn}"
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "aws_iam_policy_document": [
-        {
-          "test_policy_document": [
-            {
-              "statement": [
-                {
-                  "actions": [
-                    "ec2:RunInstances",
-                    "ec2:AssociateIamInstanceProfile",
-                    "ec2:ReplaceIamInstanceProfileAssociation"
-                  ],
-                  "effect": "Allow",
-                  "resources": [
-                    "arn:aws:ec2:::*"
-                  ]
-                },
-                {
-                  "actions": [
-                    "iam:PassRole"
-                  ],
-                  "effect": "Allow",
-                  "resources": [
-                    "${aws_instance.test.arn}"
+                    "${aws_instance.asdf.arn}"
                   ]
                 }
               ]
