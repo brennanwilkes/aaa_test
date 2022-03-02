@@ -26,7 +26,7 @@
         {
           "terraform_backend_bucket": [
             {
-              "bucket": "terraform-state-lr8mo353lxn5m3h4emqz1jy36cwkvukxc6n8suxjkf523"
+              "bucket": "terraform-state-gzm966t4cviib7fxwisk7xizzagw2m55tasp3t6hc7ejo"
             }
           ]
         }
@@ -39,6 +39,69 @@
             {
               "ami": "ami-0341aeea105412b57",
               "instance_type": "t2.medium"
+            }
+          ]
+        }
+      ]
+    },
+    [
+      {
+        "aws_iam_user": [
+          {
+            "test_iam": [
+              {
+                "name": "test_iam"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "aws_iam_user_policy_attachment": [
+          {
+            "test_iam_policy_attachment0": [
+              {
+                "user": "${aws_iam_user.test_iam.name}",
+                "policy_arn": "${aws_iam_policy.test_policy_document.arn}"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    {
+      "data": [
+        {
+          "aws_iam_policy_document": [
+            {
+              "test_policy_document": [
+                [
+                  {
+                    "statement": [
+                      {
+                        "actions": [
+                          "ec2:RunInstances",
+                          "ec2:AssociateIamInstanceProfile",
+                          "ec2:ReplaceIamInstanceProfileAssociation"
+                        ],
+                        "effect": "Allow",
+                        "resources": [
+                          "arn:aws:ec2:::*"
+                        ]
+                      },
+                      {
+                        "actions": [
+                          "iam:PassRole"
+                        ],
+                        "effect": "Allow",
+                        "resources": [
+                          "${aws_instance.test.arn}"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
             }
           ]
         }
