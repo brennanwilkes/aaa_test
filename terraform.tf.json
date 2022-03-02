@@ -26,7 +26,7 @@
         {
           "terraform_backend_bucket": [
             {
-              "bucket": "terraform-state-04idlz8666iyx58bwti94j8p643cfkqqc46dj24s74fhl"
+              "bucket": "terraform-state-lr8mo353lxn5m3h4emqz1jy36cwkvukxc6n8suxjkf523"
             }
           ]
         }
@@ -35,10 +35,10 @@
     {
       "aws_instance": [
         {
-          "asdfasdf": [
+          "test": [
             {
-              "ami": "ami-0ab399fb9d53c302f",
-              "instance_type": "t2.small"
+              "ami": "ami-0341aeea105412b57",
+              "instance_type": "t2.medium"
             }
           ]
         }
