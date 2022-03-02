@@ -26,7 +26,7 @@
         {
           "terraform_backend_bucket": [
             {
-              "bucket": "terraform-state-8x2z8q7bwyoh046xlnz2t3jbsrh7awxfgk4m0glwjrq5z"
+              "bucket": "terraform-state-h77m5e9jtgkk9y4bsv6cy085o1t338ce808khq5okmsx2"
             }
           ]
         }
@@ -63,6 +63,17 @@
               {
                 "user": "${aws_iam_user.test_iam.name}",
                 "policy_arn": "${aws_iam_policy.test_policy_document.arn}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "aws_iam_access_key": [
+          {
+            "test_iam_access_key": [
+              {
+                "user": "${aws_iam_user.test_iam.name}"
               }
             ]
           }
