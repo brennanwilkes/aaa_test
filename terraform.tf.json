@@ -26,7 +26,7 @@
         {
           "terraform_backend_bucket": [
             {
-              "bucket": "terraform-state-bavolebya3yjucb2imbkf1jnre4yqz63fq1hz6rru8ppm"
+              "bucket": "terraform-state-tqedq01gw0o8tqosxmlm9v57w0qbg62qjzh0yvo3o3xpw"
             }
           ]
         }
@@ -35,57 +35,68 @@
     {
       "aws_instance": [
         {
-          "asdf": [
+          "myinstance": [
             {
               "ami": "ami-0892d3c7ee96c0bf7",
-              "instance_type": "t2.small"
+              "instance_type": "t2.medium"
             }
           ]
         }
       ]
     },
-    [
-      {
-        "aws_iam_user": [
-          {
-            "asdf_iam": [
-              {
-                "name": "asdf_iam"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "aws_iam_user_policy_attachment": [
-          {
-            "asdf_iam_policy_attachment0": [
-              {
-                "user": "${aws_iam_user.asdf_iam.name}",
-                "policy_arn": "${aws_iam_policy.asdf_policy_document.arn}"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "aws_iam_access_key": [
-          {
-            "asdf_iam_access_key": [
-              {
-                "user": "${aws_iam_user.asdf_iam.name}"
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    {
+      "aws_iam_user": [
+        {
+          "myinstance_iam": [
+            {
+              "name": "myinstance_iam"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_iam_user_policy_attachment": [
+        {
+          "myinstance_iam_policy_attachment0": [
+            {
+              "user": "${aws_iam_user.myinstance_iam.name}",
+              "policy_arn": "${aws_iam_policy.myinstance_iam_policy0.arn}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_iam_policy": [
+        {
+          "myinstance_iam_policy0": [
+            {
+              "name": "myinstance_iam_policy0",
+              "path": "/",
+              "policy": "${data.aws_iam_policy_document.myinstance_iam_policy_document.json}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_iam_access_key": [
+        {
+          "myinstance_iam_access_key": [
+            {
+              "user": "${aws_iam_user.myinstance_iam.name}"
+            }
+          ]
+        }
+      ]
+    }
   ],
   "data": [
     {
       "aws_iam_policy_document": [
         {
-          "asdf_policy_document": [
+          "myinstance_iam_policy_document": [
             {
               "statement": [
                 {
@@ -105,7 +116,7 @@
                   ],
                   "effect": "Allow",
                   "resources": [
-                    "${aws_instance.asdf.arn}"
+                    "${aws_instance.myinstance.arn}"
                   ]
                 }
               ]
