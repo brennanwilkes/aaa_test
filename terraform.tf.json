@@ -26,7 +26,7 @@
         {
           "terraform_backend_bucket": [
             {
-              "bucket": "terraform-state-ej7a55l26pcgovpr2i9dhr06qfvatdxmsvu6qd1l792o5"
+              "bucket": "terraform-state-zw5fkq46rh8ckrft7ppidc566ejrcg7y1b43vcq8249qm"
             }
           ]
         }
@@ -35,10 +35,10 @@
     {
       "aws_instance": [
         {
-          "test": [
+          "dbtest": [
             {
-              "ami": "${data.aws_ami.ubuntu_latest.id}",
-              "instance_type": "t2.large",
+              "ami": "${data.aws_ami.windows_latest.id}",
+              "instance_type": "t2.micro",
               "lifecycle": [
                 {
                   "ignore_changes": [
@@ -56,17 +56,18 @@
     {
       "aws_ami": [
         {
-          "ubuntu_latest": [
+          "windows_latest": [
             {
               "most_recent": true,
               "owners": [
-                "099720109477"
+                "374168611083",
+                "679593333241"
               ],
               "filter": [
                 {
                   "name": "name",
                   "values": [
-                    "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"
+                    "*Windows Server*"
                   ]
                 },
                 {
