@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-xn24s3wgy8qp8lq5gfsmc9oce3bd2c8uxzwwsazz3cpto"
+      bucket = "terraform-state-ngwpvztbrlq6xulqakmi7ye983xope515fvj29xct3jue"
 }
 
 resource "aws_subnet" "devxp_vpc_subnet_private" {
