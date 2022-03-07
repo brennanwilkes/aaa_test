@@ -12,7 +12,34 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-lci3dci9oslafpxt8304wrvaqa61fdu5hzddnwfl5xxsk"
+      bucket = "terraform-state-avr22avg39l4ve5538b1c0w3p3jx2q2r5nxstq5slmfdp"
+}
+
+resource "aws_instance" "asdf" {
+      ami = data.aws_ami.ubuntu_latest.id
+      instance_type = "t2.medium"
+      lifecycle {
+        ignore_changes = [ami]
+      }
+      subnet_id = aws_subnet.devxp_vpc_subnet_public.id
+      associate_public_ip_address = true
+      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
+      iam_instance_profile = aws_iam_instance_profile.asdf_iam_role_instance_profile.name
+}
+
+resource "aws_eip" "asdf_eip" {
+      instance = aws_instance.asdf.id
+      vpc = true
+}
+
+resource "aws_iam_instance_profile" "asdf_iam_role_instance_profile" {
+      name = "asdf_iam_role_instance_profile"
+      role = aws_iam_role.asdf_iam_role.name
+}
+
+resource "aws_iam_role" "asdf_iam_role" {
+      name = "asdf_iam_role"
+      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
 resource "aws_subnet" "devxp_vpc_subnet_private" {
@@ -79,4 +106,16 @@ resource "aws_security_group" "devxp_security_group" {
       egress = []
 }
 
-data = []
+data "aws_ami" "ubuntu_latest" {
+      most_recent = true
+      owners = ["099720109477"]
+      filter {
+        name = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"]
+      }
+      filter {
+        name = "virtualization-type"
+        values = ["hvm"]
+      }
+}
+
