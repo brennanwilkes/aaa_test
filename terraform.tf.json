@@ -26,7 +26,7 @@
         {
           "terraform_backend_bucket": [
             {
-              "bucket": "terraform-state-20jq0lfpk0w61utahtttfme3piymsqkfy4upqbr3g517q"
+              "bucket": "terraform-state-98qfhs773v892m5c7do4hfsqlmmgj25olwwsqegl3x8rf"
             }
           ]
         }
@@ -158,24 +158,15 @@
               "name": "devxp_security_group",
               "ingress": [
                 {
-                  "from_port": 0,
-                  "to_port": 0,
-                  "protocol": "-1",
+                  "from_port": 22,
+                  "to_port": 22,
+                  "protocol": "tcp",
                   "cidr_blocks": [
                     "0.0.0.0/0"
                   ]
                 }
               ],
-              "egress": [
-                {
-                  "from_port": 0,
-                  "to_port": 0,
-                  "protocol": "-1",
-                  "cidr_blocks": [
-                    "0.0.0.0/0"
-                  ]
-                }
-              ]
+              "egress": []
             }
           ]
         }
