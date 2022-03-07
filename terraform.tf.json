@@ -26,23 +26,153 @@
         {
           "terraform_backend_bucket": [
             {
-              "bucket": "terraform-state-0nxvkedoe5goypajcr0o4wpod2thrsyvti06qyzu7oouu"
+              "bucket": "terraform-state-zgkpm7hxq74fhezl8naeeoymp7byevpqg1ottfbqpy2a4"
             }
           ]
         }
       ]
     },
     {
-      "aws_instance": [
+      "aws_subnet": [
         {
-          "asdf": [
+          "devxp_vpc_subnet_private": [
             {
-              "ami": "${data.aws_ami.ubuntu_latest.id}",
-              "instance_type": "t2.medium",
-              "lifecycle": [
+              "vpc_id": "${aws_vpc.devxp_vpc.id}",
+              "cidr_block": "10.0.128.0/24",
+              "map_public_ip_on_launch": false,
+              "availability_zone": "us-west-2a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_route_table": [
+        {
+          "devxp_vpc_routetable_priv": [
+            {
+              "vpc_id": "${aws_vpc.devxp_vpc.id}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_route_table_association": [
+        {
+          "devxp_vpc_subnet_private_assoc": [
+            {
+              "subnet_id": "${aws_subnet.devxp_vpc_subnet_private.id}",
+              "route_table_id": "${aws_route_table.devxp_vpc_routetable_priv.id}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_subnet": [
+        {
+          "devxp_vpc_subnet_public": [
+            {
+              "vpc_id": "${aws_vpc.devxp_vpc.id}",
+              "cidr_block": "10.0.0.0/24",
+              "map_public_ip_on_launch": true,
+              "availability_zone": "us-west-2a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_internet_gateway": [
+        {
+          "devxp_vpc_internetgateway": [
+            {
+              "vpc_id": "${aws_vpc.devxp_vpc.id}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_route_table": [
+        {
+          "devxp_vpc_routetable_pub": [
+            {
+              "route": [
                 {
-                  "ignore_changes": [
-                    "ami"
+                  "cidr_block": "0.0.0.0/0",
+                  "gateway_id": "${aws_internet_gateway.devxp_vpc_internetgateway.id}"
+                }
+              ],
+              "vpc_id": "${aws_vpc.devxp_vpc.id}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_route": [
+        {
+          "devxp_vpc_internet_route": [
+            {
+              "route_table_id": "${aws_route_table.devxp_vpc_routetable_pub.id}",
+              "destination_cidr_block": "0.0.0.0/0",
+              "gateway_id": "${aws_internet_gateway.devxp_vpc_internetgateway.id}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_route_table_association": [
+        {
+          "devxp_vpc_subnet_public_assoc": [
+            {
+              "subnet_id": "${aws_subnet.devxp_vpc_subnet_public.id}",
+              "route_table_id": "${aws_route_table.devxp_vpc_routetable_pub.id}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_vpc": [
+        {
+          "devxp_vpc": [
+            {
+              "cidr_block": "10.0.0.0/16",
+              "enable_dns_support": true,
+              "enable_dns_hostnames": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "aws_security_group": [
+        {
+          "devxp_security_group": [
+            {
+              "vpc_id": "${aws_vpc.devxp_vpc.id}",
+              "name": "devxp_security_group",
+              "ingress": [
+                {
+                  "from_port": 0,
+                  "to_port": 0,
+                  "protocol": "-1",
+                  "cidr_blocks": [
+                    "0.0.0.0/0"
+                  ]
+                }
+              ],
+              "egress": [
+                {
+                  "from_port": 0,
+                  "to_port": 0,
+                  "protocol": "-1",
+                  "cidr_blocks": [
+                    "0.0.0.0/0"
                   ]
                 }
               ]
@@ -52,34 +182,5 @@
       ]
     }
   ],
-  "data": [
-    {
-      "aws_ami": [
-        {
-          "ubuntu_latest": [
-            {
-              "most_recent": true,
-              "owners": [
-                "099720109477"
-              ],
-              "filter": [
-                {
-                  "name": "name",
-                  "values": [
-                    "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"
-                  ]
-                },
-                {
-                  "name": "virtualization-type",
-                  "values": [
-                    "hvm"
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "data": []
 }
