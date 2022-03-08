@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-lvv8ryiwwc3oq3z5i7x0pf5v8ko98micmpe4z5k0jfelr"
+      bucket = "terraform-state-x5mbifle5dq80ngrvnxgx4rvaj24g1rb7fos9aqmvlttq"
 }
 
 resource "aws_instance" "asdasdfas" {
@@ -21,7 +21,7 @@ resource "aws_instance" "asdasdfas" {
       lifecycle {
         ignore_changes = [ami]
       }
-      subnet_id = aws_subnet.devxp_vpc_subnet_public.id
+      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
       associate_public_ip_address = true
       vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
       iam_instance_profile = aws_iam_instance_profile.asdasdfas_iam_role_instance_profile.name
@@ -42,27 +42,18 @@ resource "aws_iam_role" "asdasdfas_iam_role" {
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
-resource "aws_subnet" "devxp_vpc_subnet_private" {
+resource "aws_subnet" "devxp_vpc_subnet_public0" {
       vpc_id = aws_vpc.devxp_vpc.id
-      cidr_block = "10.0.128.0/24"
-      map_public_ip_on_launch = false
-      availability_zone = "us-west-2a"
-}
-
-resource "aws_route_table" "devxp_vpc_routetable_priv" {
-      vpc_id = aws_vpc.devxp_vpc.id
-}
-
-resource "aws_route_table_association" "devxp_vpc_subnet_private_assoc" {
-      subnet_id = aws_subnet.devxp_vpc_subnet_private.id
-      route_table_id = aws_route_table.devxp_vpc_routetable_priv.id
-}
-
-resource "aws_subnet" "devxp_vpc_subnet_public" {
-      vpc_id = aws_vpc.devxp_vpc.id
-      cidr_block = "10.0.0.0/24"
+      cidr_block = "10.0.0.0/25"
       map_public_ip_on_launch = true
       availability_zone = "us-west-2a"
+}
+
+resource "aws_subnet" "devxp_vpc_subnet_public1" {
+      vpc_id = aws_vpc.devxp_vpc.id
+      cidr_block = "10.0.128.0/25"
+      map_public_ip_on_launch = true
+      availability_zone = "us-west-2b"
 }
 
 resource "aws_internet_gateway" "devxp_vpc_internetgateway" {
@@ -84,7 +75,7 @@ resource "aws_route" "devxp_vpc_internet_route" {
 }
 
 resource "aws_route_table_association" "devxp_vpc_subnet_public_assoc" {
-      subnet_id = aws_subnet.devxp_vpc_subnet_public.id
+      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
       route_table_id = aws_route_table.devxp_vpc_routetable_pub.id
 }
 
