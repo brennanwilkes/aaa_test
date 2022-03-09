@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-h7b6w26x3fggza83zkkdcijnjbkif9esfk5bx8iqkhtck"
+      bucket = "terraform-state-0920ngr01lbyjmta3ott0kyhwu220esueszt1dqbypbed"
 }
 
 resource "aws_instance" "asdasdfas" {
@@ -30,6 +30,25 @@ resource "aws_instance" "asdasdfas" {
 resource "aws_eip" "asdasdfas_eip" {
       instance = aws_instance.asdasdfas.id
       vpc = true
+}
+
+resource "aws_iam_user" "asdasdfas_iam" {
+      name = "asdasdfas_iam"
+}
+
+resource "aws_iam_user_policy_attachment" "asdasdfas_iam_policy_attachment0" {
+      user = aws_iam_user.asdasdfas_iam.name
+      policy_arn = aws_iam_policy.asdasdfas_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "asdasdfas_iam_policy0" {
+      name = "asdasdfas_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.asdasdfas_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "asdasdfas_iam_access_key" {
+      user = aws_iam_user.asdasdfas_iam.name
 }
 
 resource "aws_dynamodb_table" "asdf" {
@@ -137,6 +156,19 @@ resource "aws_security_group" "devxp_security_group" {
         to_port = 0
         protocol = "-1"
         cidr_blocks = ["0.0.0.0/0"]
+      }
+}
+
+data "aws_iam_policy_document" "asdasdfas_iam_policy_document" {
+      statement {
+        actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
+        effect = "Allow"
+        resources = ["arn:aws:ec2:::*"]
+      }
+      statement {
+        actions = ["iam:PassRole"]
+        effect = "Allow"
+        resources = [aws_instance.asdasdfas.arn]
       }
 }
 
