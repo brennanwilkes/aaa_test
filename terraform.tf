@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-0920ngr01lbyjmta3ott0kyhwu220esueszt1dqbypbed"
+      bucket = "terraform-state-dwf02yrjct3m712bi2tv3t4d1mw9x5sl4js6qh9er5apf"
 }
 
 resource "aws_instance" "asdasdfas" {
@@ -62,6 +62,7 @@ resource "aws_dynamodb_table" "asdf" {
       attribute {
         name = "asdf"
         type = "S"
+        _id = "622865ffc9042c5c872d4c5e"
       }
 }
 
