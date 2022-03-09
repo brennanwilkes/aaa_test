@@ -12,34 +12,40 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-o664bqzcgvss1osz6mj3706ncksncukrtz0wi1sgtt11t"
+      bucket = "terraform-state-bvtmkafmqc7phc7uuk6zltekgohm29k4x8rjd0l0bfb78"
 }
 
-resource "aws_instance" "asdf" {
-      ami = data.aws_ami.amazon_latest.id
-      instance_type = "t2.micro"
-      lifecycle {
-        ignore_changes = [ami]
+resource "aws_dynamodb_table" "asdfff" {
+      name = "asdfff"
+      hash_key = "fafdasdf"
+      billing_mode = "PAY_PER_REQUEST"
+      ttl {
+        attribute_name = "TimeToExist"
+        enabled = true
       }
-      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
-      associate_public_ip_address = true
-      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
-      iam_instance_profile = aws_iam_instance_profile.asdf_iam_role_instance_profile.name
+      attribute {
+        name = "fafdasdf"
+        type = "S"
+      }
 }
 
-resource "aws_eip" "asdf_eip" {
-      instance = aws_instance.asdf.id
-      vpc = true
+resource "aws_iam_user" "asdfff_iam" {
+      name = "asdfff_iam"
 }
 
-resource "aws_iam_instance_profile" "asdf_iam_role_instance_profile" {
-      name = "asdf_iam_role_instance_profile"
-      role = aws_iam_role.asdf_iam_role.name
+resource "aws_iam_user_policy_attachment" "asdfff_iam_policy_attachment0" {
+      user = aws_iam_user.asdfff_iam.name
+      policy_arn = aws_iam_policy.asdfff_iam_policy0.arn
 }
 
-resource "aws_iam_role" "asdf_iam_role" {
-      name = "asdf_iam_role"
-      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+resource "aws_iam_policy" "asdfff_iam_policy0" {
+      name = "asdfff_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.asdfff_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "asdfff_iam_access_key" {
+      user = aws_iam_user.asdfff_iam.name
 }
 
 resource "aws_subnet" "devxp_vpc_subnet_public0" {
@@ -88,30 +94,20 @@ resource "aws_vpc" "devxp_vpc" {
 resource "aws_security_group" "devxp_security_group" {
       vpc_id = aws_vpc.devxp_vpc.id
       name = "devxp_security_group"
-      ingress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-      }
-      egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-      }
+      ingress = []
+      egress = []
 }
 
-data "aws_ami" "amazon_latest" {
-      most_recent = true
-      owners = ["585441382316"]
-      filter {
-        name = "name"
-        values = ["*AmazonLinux*"]
+data "aws_iam_policy_document" "asdfff_iam_policy_document" {
+      statement {
+        actions = ["dynamodb:DescribeTable", "dynamodb:Query", "dynamodb:Scan", "dynamodb:BatchGet*", "dynamodb:DescribeStream", "dynamodb:DescribeTable", "dynamodb:Get*", "dynamodb:Query", "dynamodb:Scan", "dynamodb:BatchWrite*", "dynamodb:CreateTable", "dynamodb:Delete*", "dynamodb:Update*", "dynamodb:PutItem"]
+        effect = "Allow"
+        resources = [aws_dynamodb_table.asdfff.arn]
       }
-      filter {
-        name = "virtualization-type"
-        values = ["hvm"]
+      statement {
+        actions = ["dynamodb:List*", "dynamodb:DescribeReservedCapacity*", "dynamodb:DescribeLimits", "dynamodb:DescribeTimeToLive"]
+        effect = "Allow"
+        resources = ["*"]
       }
 }
 
