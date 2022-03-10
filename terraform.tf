@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-iuhqdagbmjlsmkdqpyiy6ugsieejo2wjkotkt64w8674u"
+      bucket = "terraform-state-3p7blejnx9d18mslsuaos90s5qvgarwh6xpqyuhr0mpe9"
 }
 
 resource "aws_instance" "asdasdfas" {
@@ -34,16 +34,15 @@ resource "aws_eip" "asdasdfas_eip" {
 
 resource "aws_dynamodb_table" "asdf" {
       name = "asdf"
-      hash_key = "asdf"
+      hash_key = "asdfDAFADF"
       billing_mode = "PAY_PER_REQUEST"
       ttl {
         attribute_name = "TimeToExist"
         enabled = true
       }
       attribute {
-        name = "asdf"
+        name = "asdfDAFADF"
         type = "S"
-        _id = "62286836c9042c5c872d4c84"
       }
 }
 
@@ -127,12 +126,6 @@ resource "aws_vpc" "devxp_vpc" {
 resource "aws_security_group" "devxp_security_group" {
       vpc_id = aws_vpc.devxp_vpc.id
       name = "devxp_security_group"
-      ingress {
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-      }
       ingress {
         from_port = 80
         to_port = 80
