@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-c7nkpm5iiv6juhqwz55lw0bcg2pn32agbn3t2uwqu8ssm"
+      bucket = "terraform-state-wiwua8zmjq3mwpt2vwx6nbzr3u7gf20mc25h4s2wrx8vx"
 }
 
 resource "aws_instance" "asdasdfas" {
@@ -230,18 +230,17 @@ resource "aws_security_group" "devxp_security_group" {
       vpc_id = aws_vpc.devxp_vpc.id
       name = "devxp_security_group"
       ingress {
-        from_port = 80
-        to_port = 80
-        protocol = "tcp"
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
         cidr_blocks = ["0.0.0.0/0"]
       }
-      ingress {
-        from_port = 443
-        to_port = 443
-        protocol = "tcp"
+      egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
         cidr_blocks = ["0.0.0.0/0"]
       }
-      egress = []
 }
 
 data "aws_ami" "amazon_latest" {
