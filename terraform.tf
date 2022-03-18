@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-niw29esrswlciu5xhpjml8ma2inhi2vdhxa0s7zv2x9jp"
+      bucket = "terraform-state-c7nkpm5iiv6juhqwz55lw0bcg2pn32agbn3t2uwqu8ssm"
 }
 
 resource "aws_instance" "asdasdfas" {
@@ -68,6 +68,42 @@ resource "aws_iam_access_key" "Instance-Enet_iam_access_key" {
       user = aws_iam_user.Instance-Enet_iam.name
 }
 
+resource "aws_instance" "Instance-rlkc" {
+      ami = data.aws_ami.ubuntu_latest.id
+      instance_type = "t2.large"
+      lifecycle {
+        ignore_changes = [ami]
+      }
+      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
+      associate_public_ip_address = true
+      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
+      iam_instance_profile = aws_iam_instance_profile.Instance-rlkc_iam_role_instance_profile.name
+}
+
+resource "aws_eip" "Instance-rlkc_eip" {
+      instance = aws_instance.Instance-rlkc.id
+      vpc = true
+}
+
+resource "aws_iam_user" "Instance-rlkc_iam" {
+      name = "Instance-rlkc_iam"
+}
+
+resource "aws_iam_user_policy_attachment" "Instance-rlkc_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-rlkc_iam.name
+      policy_arn = aws_iam_policy.Instance-rlkc_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "Instance-rlkc_iam_policy0" {
+      name = "Instance-rlkc_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.Instance-rlkc_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "Instance-rlkc_iam_access_key" {
+      user = aws_iam_user.Instance-rlkc_iam.name
+}
+
 resource "aws_dynamodb_table" "asdf" {
       name = "asdf"
       hash_key = "asdfDAFADF"
@@ -112,6 +148,11 @@ resource "aws_iam_instance_profile" "Instance-Enet_iam_role_instance_profile" {
       role = aws_iam_role.Instance-Enet_iam_role.name
 }
 
+resource "aws_iam_instance_profile" "Instance-rlkc_iam_role_instance_profile" {
+      name = "Instance-rlkc_iam_role_instance_profile"
+      role = aws_iam_role.Instance-rlkc_iam_role.name
+}
+
 resource "aws_iam_role" "asdasdfas_iam_role" {
       name = "asdasdfas_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
@@ -119,6 +160,11 @@ resource "aws_iam_role" "asdasdfas_iam_role" {
 
 resource "aws_iam_role" "Instance-Enet_iam_role" {
       name = "Instance-Enet_iam_role"
+      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+}
+
+resource "aws_iam_role" "Instance-rlkc_iam_role" {
+      name = "Instance-rlkc_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
@@ -130,6 +176,11 @@ resource "aws_iam_role_policy_attachment" "asdasdfas_iam_role_asdf_iam_policy0_a
 resource "aws_iam_role_policy_attachment" "Instance-Enet_iam_role_asdf_iam_policy0_attachment" {
       policy_arn = aws_iam_policy.asdf_iam_policy0.arn
       role = aws_iam_role.Instance-Enet_iam_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "Instance-rlkc_iam_role_asdf_iam_policy0_attachment" {
+      policy_arn = aws_iam_policy.asdf_iam_policy0.arn
+      role = aws_iam_role.Instance-rlkc_iam_role.name
 }
 
 resource "aws_subnet" "devxp_vpc_subnet_public0" {
@@ -216,6 +267,32 @@ data "aws_iam_policy_document" "Instance-Enet_iam_policy_document" {
         actions = ["iam:PassRole"]
         effect = "Allow"
         resources = [aws_instance.Instance-Enet.arn]
+      }
+}
+
+data "aws_iam_policy_document" "Instance-rlkc_iam_policy_document" {
+      statement {
+        actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
+        effect = "Allow"
+        resources = ["arn:aws:ec2:::*"]
+      }
+      statement {
+        actions = ["iam:PassRole"]
+        effect = "Allow"
+        resources = [aws_instance.Instance-rlkc.arn]
+      }
+}
+
+data "aws_ami" "ubuntu_latest" {
+      most_recent = true
+      owners = ["099720109477"]
+      filter {
+        name = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"]
+      }
+      filter {
+        name = "virtualization-type"
+        values = ["hvm"]
       }
 }
 
