@@ -12,7 +12,43 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-nkdybtd5hkjus1n1nv24qn1llhc5cfqxbx26okp5bb324"
+      bucket = "terraform-state-jx3frxmq4v8d7pgx4n8e22z5719ot8adu1ib9x8cxa7xc"
+}
+
+resource "aws_instance" "Instance-YAGk" {
+      ami = data.aws_ami.ubuntu_latest.id
+      instance_type = "c3.2xlarge"
+      lifecycle {
+        ignore_changes = [ami]
+      }
+      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
+      associate_public_ip_address = true
+      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
+      iam_instance_profile = aws_iam_instance_profile.Instance-YAGk_iam_role_instance_profile.name
+}
+
+resource "aws_eip" "Instance-YAGk_eip" {
+      instance = aws_instance.Instance-YAGk.id
+      vpc = true
+}
+
+resource "aws_iam_user" "Instance-YAGk_iam" {
+      name = "Instance-YAGk_iam"
+}
+
+resource "aws_iam_user_policy_attachment" "Instance-YAGk_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-YAGk_iam.name
+      policy_arn = aws_iam_policy.Instance-YAGk_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "Instance-YAGk_iam_policy0" {
+      name = "Instance-YAGk_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.Instance-YAGk_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "Instance-YAGk_iam_access_key" {
+      user = aws_iam_user.Instance-YAGk_iam.name
 }
 
 resource "aws_instance" "Instance-pUnY" {
@@ -80,14 +116,29 @@ resource "aws_iam_access_key" "Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam_access_key" {
       user = aws_iam_user.Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam.name
 }
 
+resource "aws_iam_instance_profile" "Instance-YAGk_iam_role_instance_profile" {
+      name = "Instance-YAGk_iam_role_instance_profile"
+      role = aws_iam_role.Instance-YAGk_iam_role.name
+}
+
 resource "aws_iam_instance_profile" "Instance-pUnY_iam_role_instance_profile" {
       name = "Instance-pUnY_iam_role_instance_profile"
       role = aws_iam_role.Instance-pUnY_iam_role.name
 }
 
+resource "aws_iam_role" "Instance-YAGk_iam_role" {
+      name = "Instance-YAGk_iam_role"
+      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+}
+
 resource "aws_iam_role" "Instance-pUnY_iam_role" {
       name = "Instance-pUnY_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+}
+
+resource "aws_iam_role_policy_attachment" "Instance-YAGk_iam_role_Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam_policy0_attachment" {
+      policy_arn = aws_iam_policy.Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam_policy0.arn
+      role = aws_iam_role.Instance-YAGk_iam_role.name
 }
 
 resource "aws_iam_role_policy_attachment" "Instance-pUnY_iam_role_Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam_policy0_attachment" {
@@ -150,7 +201,7 @@ resource "aws_security_group" "devxp_security_group" {
       egress = []
 }
 
-data "aws_iam_policy_document" "Instance-pUnY_iam_policy_document" {
+data "aws_iam_policy_document" "Instance-YAGk_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -159,7 +210,7 @@ data "aws_iam_policy_document" "Instance-pUnY_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.Instance-pUnY.arn]
+        resources = [aws_instance.Instance-YAGk.arn]
       }
 }
 
@@ -173,6 +224,19 @@ data "aws_ami" "ubuntu_latest" {
       filter {
         name = "virtualization-type"
         values = ["hvm"]
+      }
+}
+
+data "aws_iam_policy_document" "Instance-pUnY_iam_policy_document" {
+      statement {
+        actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
+        effect = "Allow"
+        resources = ["arn:aws:ec2:::*"]
+      }
+      statement {
+        actions = ["iam:PassRole"]
+        effect = "Allow"
+        resources = [aws_instance.Instance-pUnY.arn]
       }
 }
 
