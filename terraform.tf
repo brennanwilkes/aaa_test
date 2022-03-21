@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-wiwua8zmjq3mwpt2vwx6nbzr3u7gf20mc25h4s2wrx8vx"
+      bucket = "terraform-state-60401zeb56l4g1j7978za2be3i7742cgzcrglqjg55v29"
 }
 
 resource "aws_instance" "asdasdfas" {
@@ -104,6 +104,37 @@ resource "aws_iam_access_key" "Instance-rlkc_iam_access_key" {
       user = aws_iam_user.Instance-rlkc_iam.name
 }
 
+resource "aws_sns_topic" "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_sns_topic" {
+      name = "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_sns_topic"
+}
+
+resource "aws_glacier_vault" "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw" {
+      name = "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw"
+      notification {
+        sns_topic = aws_sns_topic.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_sns_topic.arn
+        events = ["ArchiveRetrievalCompleted", "InventoryRetrievalCompleted"]
+      }
+}
+
+resource "aws_iam_user" "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam" {
+      name = "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam"
+}
+
+resource "aws_iam_user_policy_attachment" "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy_attachment0" {
+      user = aws_iam_user.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam.name
+      policy_arn = aws_iam_policy.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0" {
+      name = "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_access_key" {
+      user = aws_iam_user.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam.name
+}
+
 resource "aws_dynamodb_table" "asdf" {
       name = "asdf"
       hash_key = "asdfDAFADF"
@@ -166,6 +197,21 @@ resource "aws_iam_role" "Instance-Enet_iam_role" {
 resource "aws_iam_role" "Instance-rlkc_iam_role" {
       name = "Instance-rlkc_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+}
+
+resource "aws_iam_role_policy_attachment" "asdasdfas_iam_role_Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0_attachment" {
+      policy_arn = aws_iam_policy.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0.arn
+      role = aws_iam_role.asdasdfas_iam_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "Instance-Enet_iam_role_Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0_attachment" {
+      policy_arn = aws_iam_policy.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0.arn
+      role = aws_iam_role.Instance-Enet_iam_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "Instance-rlkc_iam_role_Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0_attachment" {
+      policy_arn = aws_iam_policy.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy0.arn
+      role = aws_iam_role.Instance-rlkc_iam_role.name
 }
 
 resource "aws_iam_role_policy_attachment" "asdasdfas_iam_role_asdf_iam_policy0_attachment" {
@@ -292,6 +338,19 @@ data "aws_ami" "ubuntu_latest" {
       filter {
         name = "virtualization-type"
         values = ["hvm"]
+      }
+}
+
+data "aws_iam_policy_document" "Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw_iam_policy_document" {
+      statement {
+        actions = ["glacier:InitiateJob", "glacier:GetJobOutput", "glacier:UploadArchive", "glacier:InitiateMultipartUpload", "glacier:AbortMultipartUpload", "glacier:CompleteMultipartUpload", "glacier:DescribeVault"]
+        effect = "Allow"
+        resources = [aws_glacier_vault.Glacier-FIZU-uUCZ-QSOb-HAMf-HHvw.arn]
+      }
+      statement {
+        actions = ["glacier:ListVaults"]
+        effect = "Allow"
+        resources = ["*"]
       }
 }
 
