@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-lmvanjpw7pui6leg5g25wbirvdkh5ya6804lvmqr8h9tg"
+      bucket = "terraform-state-3g3gxpp2nfdj174hyiz4x5lju3gpml8zgac93xcugti27"
 }
 
 resource "aws_instance" "Instance-YAGk" {
@@ -129,8 +129,8 @@ resource "aws_lambda_function" "Lambda-HLMs" {
       source_code_hash = data.archive_file.Lambda-HLMs-archive.output_base64sha256
       handler = "test.test"
       vpc_config {
-        subnet_ids = [aws_subnet.devxp_vpc_subnet_public.id]
-        security_group_ids = [aws_default_security_group.devxp_security_group.id]
+        subnet_ids = [aws_subnet.devxp_vpc_subnet_public0.id]
+        security_group_ids = [aws_security_group.devxp_security_group.id]
       }
 }
 
