@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-z25qvz9bbqe1ym73ei5uethm12haus5djzql7rzqe93hg"
+      bucket = "terraform-state-69tnch3ul8ot5q16bxb2hmzz8cck9s8i30ytyxx7wgnp7"
 }
 
 resource "aws_instance" "Instance-YAGk" {
@@ -29,7 +29,7 @@ resource "aws_instance" "Instance-YAGk" {
 
 resource "aws_eip" "Instance-YAGk_eip" {
       vpc = true
-      instace = aws_instance.Instance-YAGk.id
+      instance = aws_instance.Instance-YAGk.id
 }
 
 resource "aws_iam_user" "Instance-YAGk_iam" {
@@ -65,7 +65,7 @@ resource "aws_instance" "Instance-pUnY" {
 
 resource "aws_eip" "Instance-pUnY_eip" {
       vpc = true
-      instace = aws_instance.Instance-pUnY.id
+      instance = aws_instance.Instance-pUnY.id
 }
 
 resource "aws_iam_user" "Instance-pUnY_iam" {
