@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-69tnch3ul8ot5q16bxb2hmzz8cck9s8i30ytyxx7wgnp7"
+      bucket = "terraform-state-y3udm33ommc5xynik58z10ehq8wu3almdc0qn6v3vy4tr"
 }
 
 resource "aws_instance" "Instance-YAGk" {
@@ -114,6 +114,24 @@ resource "aws_iam_policy" "Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam_policy0" {
 
 resource "aws_iam_access_key" "Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam_access_key" {
       user = aws_iam_user.Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam.name
+}
+
+resource "aws_iam_role" "iam_for_lambda_Lambda-HLMs" {
+      name = "iam_for_lambda_Lambda-HLMs"
+      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+}
+
+resource "aws_lambda_function" "Lambda-HLMs" {
+      function_name = "Lambda-HLMs"
+      role = aws_iam_role.iam_for_lambda_Lambda-HLMs.arn
+      filename = "outputs/test.js.zip"
+      runtime = "nodejs14.x"
+      source_code_hash = data.archive_file.Lambda-HLMs-archive.output_base64sha256
+      handler = "test.test"
+      vpc_config = {
+        subnet_ids = [aws_subnet.devxp_vpc_subnet_public.id]
+        security_group_ids = [aws_default_security_group.devxp_security_group.id]
+      }
 }
 
 resource "aws_iam_instance_profile" "Instance-YAGk_iam_role_instance_profile" {
@@ -251,5 +269,11 @@ data "aws_iam_policy_document" "Bucket-UyEI-dHZR-FboQ-pWMC-EXBc_iam_policy_docum
         effect = "Allow"
         resources = [aws_s3_bucket.Bucket-UyEI-dHZR-FboQ-pWMC-EXBc.arn]
       }
+}
+
+data "archive_file" "Lambda-HLMs-archive" {
+      type = "zip"
+      source_file = "test.js"
+      output_path = "outputs/test.js.zip"
 }
 
