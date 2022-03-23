@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-wkss0j2kfwm654tvlp0df459fvmstir7dwcuwwnomjv9n"
+      bucket = "terraform-state-2wef2zd2rvkiij95eh57h4wvqkifbl5dvip5rwxam7udg"
 }
 
 resource "aws_iam_role" "Lambda-HLMs-lambda-iam-role" {
@@ -22,7 +22,7 @@ resource "aws_iam_role" "Lambda-HLMs-lambda-iam-role" {
 
 resource "aws_lambda_function" "Lambda-HLMs" {
       function_name = "Lambda-HLMs"
-      role = aws_iam_role.iam_for_lambda_Lambda-HLMs.arn
+      role = aws_iam_role.Lambda-HLMs-lambda-iam-role.arn
       filename = "outputs/test.js.zip"
       runtime = "nodejs14.x"
       source_code_hash = data.archive_file.Lambda-HLMs-archive.output_base64sha256
