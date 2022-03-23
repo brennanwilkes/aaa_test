@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-xrec8xcdo7e2sujsejf9gk60dc035p5yymnt3rhenc7ej"
+      bucket = "terraform-state-a98crxck96tiuw52mabmp4iyaw1io90419gaaffw65vp3"
 }
 
 resource "aws_iam_role" "iam_for_lambda_Lambda-HLMs" {
@@ -92,5 +92,13 @@ data "archive_file" "Lambda-HLMs-archive" {
       type = "zip"
       source_file = "test.js"
       output_path = "outputs/test.js.zip"
+}
+
+data = {
+  aws_iam_policy_document = {
+    "Lambda-HLMs-ec2Access_policy" "statement" {
+      effect = "Allow"
+      actions = ["ec2:DescribeSecurityGroups", "ec2:DescribeSubnets", "ec2:DescribeVpcs", "logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents", "ec2:CreateNetworkInterface", "ec2:DescribeNetworkInterfaces", "ec2:DeleteNetworkInterface"]
+      resources = ["*"]
 }
 
