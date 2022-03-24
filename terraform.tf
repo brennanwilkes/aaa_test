@@ -14,7 +14,7 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-w6x3xalsx4atupsgxtybus635wr94unf6grw8t61k90gs"
+      name = "terraform-state-77jle8ly0ieydpbipql3p5v65xglduijk0bngofjt9ltc"
       project = "devxp-339721"
 }
 
@@ -43,7 +43,7 @@ resource "google_storage_bucket_object" "GoogleFunction-ENIT-zip" {
 }
 
 resource "google_storage_bucket" "GoogleFunction-ENIT-bucket" {
-      name = "GoogleFunction-ENIT-devxp-storage-bucket-for-func"
+      name = "googlefunction-enit-devxp-storage-bucket-for-func"
       location = "us-west1"
       project = "devxp-339721"
 }
