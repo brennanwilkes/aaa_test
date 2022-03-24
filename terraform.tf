@@ -14,7 +14,7 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-7iqu88jz76sbn2zy9zzwnm5x8p8o9xy9tpg5ykmiqfkpk"
+      name = "terraform-state-an6tsl61dnad1azmdbubmh8voie9rlh2jy9szngzypxsd"
       project = "devxp-339721"
 }
 
@@ -22,11 +22,11 @@ resource "google_compute_instance" "GCE-pmwd-a" {
       name = "GCE-pmwd-a"
       machine_type = "f1.micro"
       zone = "us-west1-a"
-      network_interface = {
+      network_interface {
         network = "default"
       }
-      boot_disk = {
-        initialize_params = {
+      boot_disk {
+        initialize_params {
           image = "ubuntu-2004-focal-v20220204"
         }
       }
@@ -42,11 +42,11 @@ resource "google_compute_instance" "GCE-pmwd-b" {
       name = "GCE-pmwd-b"
       machine_type = "f1.micro"
       zone = "us-west1-a"
-      network_interface = {
+      network_interface {
         network = "default"
       }
-      boot_disk = {
-        initialize_params = {
+      boot_disk {
+        initialize_params {
           image = "ubuntu-2004-focal-v20220204"
         }
       }
