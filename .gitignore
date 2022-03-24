@@ -1,0 +1,5 @@
+terraform*
+outputs/
+node_modules/
+.terraform*
+.terraform/
