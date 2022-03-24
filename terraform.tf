@@ -14,7 +14,7 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-n3m1dc261kk4jeb99xnpezn6qumt07z43dlvtdxchc4hw"
+      name = "terraform-state-xs5phjbvy2dpe65vfm2ndc49yvz8myhm14uoahldp5hqd"
       project = "devxp-339721"
 }
 
