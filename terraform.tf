@@ -14,48 +14,40 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-y08m7j728cy3y38tsui63zov2rf9x17wfxrru8440vpg8"
+      name = "terraform-state-wzujdfv5hbsz8cmf986p8uqxsx8dldeluufxmd2htztjz"
       project = "devxp-339721"
 }
 
-resource "google_compute_instance" "gce-mhva" {
-      name = "gce-mhva"
-      machine_type = "f1-micro"
-      zone = "us-west1-a"
-      network_interface {
-        network = "default"
-      }
-      boot_disk {
-        initialize_params {
-          image = "ubuntu-2004-focal-v20220204"
+resource "google_cloud_run_service" "cloud-run-efrd" {
+      name = "cloud-run-efrd"
+      location = "us-west1"
+      autogenerate_revision_name = true
+      template {
+        spec {
+          containers {
+            image = "gcr.io/cloudrun/hello"
+
+          }
         }
       }
-      project = "devxp-339721"
-}
-
-resource "google_project_service" "gce-mhva-service" {
-      disable_on_destroy = false
-      service = "compute.googleapis.com"
-}
-
-resource "google_compute_instance" "gce-pbeo" {
-      name = "gce-pbeo"
-      machine_type = "f1-micro"
-      zone = "us-west1-a"
-      network_interface {
-        network = "default"
+      traffic {
+        percent = 100
+        latest_revision = true
       }
-      boot_disk {
-        initialize_params {
-          image = "ubuntu-2004-focal-v20220204"
-        }
-      }
-      project = "devxp-339721"
+      depends_on = [google_project_service.cloud-run-efrd-service]
 }
 
-resource "google_project_service" "gce-pbeo-service" {
+resource "google_cloud_run_service_iam_member" "cloud-run-efrd-iam" {
+      service = google_cloud_run_service.cloud-run-efrd.name
+      location = google_cloud_run_service.cloud-run-efrd.location
+      project = google_cloud_run_service.cloud-run-efrd.project
+      role = "roles/run.invoker"
+      member = "allUsers"
+}
+
+resource "google_project_service" "cloud-run-efrd-service" {
       disable_on_destroy = false
-      service = "compute.googleapis.com"
+      service = "run.googleapis.com"
 }
 
 
