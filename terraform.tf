@@ -14,13 +14,13 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-g0yszp0zdp62t2o6efgoywoh2c1rdseg3nhz0du91nnyz"
+      name = "terraform-state-y08m7j728cy3y38tsui63zov2rf9x17wfxrru8440vpg8"
       project = "devxp-339721"
 }
 
-resource "google_compute_instance" "gce-pmwd-a" {
-      name = "gce-pmwd-a"
-      machine_type = "f1.micro"
+resource "google_compute_instance" "gce-mhva" {
+      name = "gce-mhva"
+      machine_type = "f1-micro"
       zone = "us-west1-a"
       network_interface {
         network = "default"
@@ -33,14 +33,14 @@ resource "google_compute_instance" "gce-pmwd-a" {
       project = "devxp-339721"
 }
 
-resource "google_project_service" "gce-pmwd-a-service" {
+resource "google_project_service" "gce-mhva-service" {
       disable_on_destroy = false
       service = "compute.googleapis.com"
 }
 
-resource "google_compute_instance" "gce-pmwd-b" {
-      name = "gce-pmwd-b"
-      machine_type = "f1.micro"
+resource "google_compute_instance" "gce-pbeo" {
+      name = "gce-pbeo"
+      machine_type = "f1-micro"
       zone = "us-west1-a"
       network_interface {
         network = "default"
@@ -53,7 +53,7 @@ resource "google_compute_instance" "gce-pmwd-b" {
       project = "devxp-339721"
 }
 
-resource "google_project_service" "gce-pmwd-b-service" {
+resource "google_project_service" "gce-pbeo-service" {
       disable_on_destroy = false
       service = "compute.googleapis.com"
 }
