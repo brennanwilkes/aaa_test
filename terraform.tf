@@ -14,12 +14,12 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-an6tsl61dnad1azmdbubmh8voie9rlh2jy9szngzypxsd"
+      name = "terraform-state-g0yszp0zdp62t2o6efgoywoh2c1rdseg3nhz0du91nnyz"
       project = "devxp-339721"
 }
 
-resource "google_compute_instance" "GCE-pmwd-a" {
-      name = "GCE-pmwd-a"
+resource "google_compute_instance" "gce-pmwd-a" {
+      name = "gce-pmwd-a"
       machine_type = "f1.micro"
       zone = "us-west1-a"
       network_interface {
@@ -33,13 +33,13 @@ resource "google_compute_instance" "GCE-pmwd-a" {
       project = "devxp-339721"
 }
 
-resource "google_project_service" "GCE-pmwd-a-service" {
+resource "google_project_service" "gce-pmwd-a-service" {
       disable_on_destroy = false
       service = "compute.googleapis.com"
 }
 
-resource "google_compute_instance" "GCE-pmwd-b" {
-      name = "GCE-pmwd-b"
+resource "google_compute_instance" "gce-pmwd-b" {
+      name = "gce-pmwd-b"
       machine_type = "f1.micro"
       zone = "us-west1-a"
       network_interface {
@@ -53,7 +53,7 @@ resource "google_compute_instance" "GCE-pmwd-b" {
       project = "devxp-339721"
 }
 
-resource "google_project_service" "GCE-pmwd-b-service" {
+resource "google_project_service" "gce-pmwd-b-service" {
       disable_on_destroy = false
       service = "compute.googleapis.com"
 }
