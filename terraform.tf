@@ -14,51 +14,44 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-2qqb1lfwq47jmi1xbxhh9agnvny2w0wm22nbv5opmx2p2"
+      name = "terraform-state-la2icqqr1th9jalkudtsj6odb0w7zk92x315kjyv327yf"
       project = "devxp-339721"
 }
 
-resource "google_cloudfunctions_function" "Function-ENIT" {
-      name = "Function-ENIT"
-      runtime = "nodejs16"
-      available_memory_mb = 128
-      source_archive_bucket = google_storage_bucket.Function-ENIT-bucket.name
-      source_archive_object = google_storage_bucket_object.Function-ENIT-zip.name
-      trigger_http = true
-      entry_point = "main"
+resource "google_compute_instance" "GCE-pmwd-a" {
+      name = "GCE-pmwd-a"
+      machine_type = "f1.micro"
+      zone = "us-west1-a"
+      network_interface = {
+        network = "default"
+      }
+      "boot_disk" "initialize_params" {
+        image = "ubuntu-2004-focal-v20220204"
+      }
       project = "devxp-339721"
-      depends_on = [google_project_service.Function-ENIT-service]
 }
 
-resource "google_project_service" "Function-ENIT-service" {
+resource "google_project_service" "GCE-pmwd-a-service" {
       disable_on_destroy = false
+      service = "compute.googleapis.com"
+}
+
+resource "google_compute_instance" "GCE-pmwd-b" {
+      name = "GCE-pmwd-b"
+      machine_type = "f1.micro"
+      zone = "us-west1-a"
+      network_interface = {
+        network = "default"
+      }
+      "boot_disk" "initialize_params" {
+        image = "ubuntu-2004-focal-v20220204"
+      }
       project = "devxp-339721"
-      service = "cloudfunctions.googleapis.com"
 }
 
-resource "google_storage_bucket_object" "Function-ENIT-zip" {
-      name = "source.zip#${data.archive_file.Function-ENIT-archive.output_md5}"
-      bucket = google_storage_bucket.Function-ENIT-bucket.name
-      source = data.archive_file.Function-ENIT-archive.output_path
+resource "google_project_service" "GCE-pmwd-b-service" {
+      disable_on_destroy = false
+      service = "compute.googleapis.com"
 }
 
-resource "google_storage_bucket" "Function-ENIT-bucket" {
-      name = "devxp-storage-bucket-for-func-function-enit"
-      location = "us-west1"
-      project = "devxp-339721"
-}
-
-resource "google_cloudfunctions_function_iam_member" "invoker" {
-      project = google_cloudfunctions_function.Function-ENIT.project
-      region = google_cloudfunctions_function.Function-ENIT.region
-      cloud_function = google_cloudfunctions_function.Function-ENIT.name
-      role = "roles/cloudfunctions.invoker"
-      member = "allUsers"
-}
-
-data "archive_file" "Function-ENIT-archive" {
-      type = "zip"
-      source_dir = "./"
-      output_path = "/tmp/function-Function-ENIT.zip"
-}
 
