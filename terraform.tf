@@ -14,7 +14,7 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-9lw4bfuqgav9fqual8oblostxepchhccpbe09mn2cpj5s"
+      name = "terraform-state-3eyr7qtcqfhuk8e2q9e6f72w2n09bb8ir754t3odspx6s"
       project = "devxp-339721"
 }
 
@@ -59,12 +59,12 @@ resource "google_project_service" "cloud-run-lele-service" {
 
 
 variable "CLOUD_RUN_testtest" {
-    type = "string"
+    type = string
     sensitive = true
 }
 
 variable "CLOUD_RUN_testtesttest" {
-    type = "string"
+    type = string
     sensitive = true
 }
 
