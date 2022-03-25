@@ -14,12 +14,12 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-wudmx037m4hf5r8i744g5xaeke8p64ehzp2fqkti6d602"
+      name = "terraform-state-xlm78ncvlcrnws2wo936kpxt2s2cdjqgvk086mxpezdz9"
       project = "devxp-339721"
 }
 
-resource "google_cloud_run_service" "cloud-run-cjkk" {
-      name = "cloud-run-cjkk"
+resource "google_cloud_run_service" "cloud-run-lele" {
+      name = "cloud-run-lele"
       location = "us-west1"
       autogenerate_revision_name = true
       template {
@@ -30,6 +30,10 @@ resource "google_cloud_run_service" "cloud-run-cjkk" {
               name = "testtest"
               value = var.CLOUD_RUN_testtest
             }
+            env {
+              name = "testtesttest"
+              value = var.CLOUD_RUN_testtesttest
+            }
           }
         }
       }
@@ -37,25 +41,31 @@ resource "google_cloud_run_service" "cloud-run-cjkk" {
         percent = 100
         latest_revision = true
       }
-      depends_on = [google_project_service.cloud-run-cjkk-service]
+      depends_on = [google_project_service.cloud-run-lele-service]
 }
 
-resource "google_cloud_run_service_iam_member" "cloud-run-cjkk-iam" {
-      service = google_cloud_run_service.cloud-run-cjkk.name
-      location = google_cloud_run_service.cloud-run-cjkk.location
-      project = google_cloud_run_service.cloud-run-cjkk.project
+resource "google_cloud_run_service_iam_member" "cloud-run-lele-iam" {
+      service = google_cloud_run_service.cloud-run-lele.name
+      location = google_cloud_run_service.cloud-run-lele.location
+      project = google_cloud_run_service.cloud-run-lele.project
       role = "roles/run.invoker"
       member = "allUsers"
 }
 
-resource "google_project_service" "cloud-run-cjkk-service" {
+resource "google_project_service" "cloud-run-lele-service" {
       disable_on_destroy = false
       service = "run.googleapis.com"
 }
 
 
-variable = {
+variable {
   CLOUD_RUN_testtest = {
+    type = "string"
+    sensitive = true
+}
+
+variable {
+  CLOUD_RUN_testtesttest = {
     type = "string"
     sensitive = true
 }
