@@ -14,13 +14,13 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-e9dmuagajvw2j5xvuorib2pr8j48v6q6xbmewycrhk859"
+      name = "terraform-state-vyi5i2s17j0t8fjtzfbsio9pozhj2f1qqpqihw68in849"
       project = "devxp-339721"
 }
 
-resource "google_compute_instance" "gce-epxh" {
-      name = "gce-epxh"
-      machine_type = "n1-standard-1"
+resource "google_compute_instance" "gce-iiit" {
+      name = "gce-iiit"
+      machine_type = "f1-micro"
       zone = "us-west1-a"
       network_interface {
         network = "default"
@@ -33,7 +33,7 @@ resource "google_compute_instance" "gce-epxh" {
       project = "devxp-339721"
 }
 
-resource "google_project_service" "gce-epxh-service" {
+resource "google_project_service" "gce-iiit-service" {
       disable_on_destroy = false
       service = "compute.googleapis.com"
 }
