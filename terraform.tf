@@ -14,57 +14,28 @@ provider "google" {
 
 resource "google_storage_bucket" "terraform_backend_bucket" {
       location = "us-west1"
-      name = "terraform-state-3eyr7qtcqfhuk8e2q9e6f72w2n09bb8ir754t3odspx6s"
+      name = "terraform-state-e9dmuagajvw2j5xvuorib2pr8j48v6q6xbmewycrhk859"
       project = "devxp-339721"
 }
 
-resource "google_cloud_run_service" "cloud-run-lele" {
-      name = "cloud-run-lele"
-      location = "us-west1"
-      autogenerate_revision_name = true
-      template {
-        spec {
-          containers {
-            image = "gcr.io/cloudrun/hello"
-            env {
-              name = "testtest"
-              value = var.CLOUD_RUN_testtest
-            }
-            env {
-              name = "testtesttest"
-              value = var.CLOUD_RUN_testtesttest
-            }
-          }
+resource "google_compute_instance" "gce-epxh" {
+      name = "gce-epxh"
+      machine_type = "n1-standard-1"
+      zone = "us-west1-a"
+      network_interface {
+        network = "default"
+      }
+      boot_disk {
+        initialize_params {
+          image = "ubuntu-2004-focal-v20220204"
         }
       }
-      traffic {
-        percent = 100
-        latest_revision = true
-      }
-      depends_on = [google_project_service.cloud-run-lele-service]
+      project = "devxp-339721"
 }
 
-resource "google_cloud_run_service_iam_member" "cloud-run-lele-iam" {
-      service = google_cloud_run_service.cloud-run-lele.name
-      location = google_cloud_run_service.cloud-run-lele.location
-      project = google_cloud_run_service.cloud-run-lele.project
-      role = "roles/run.invoker"
-      member = "allUsers"
-}
-
-resource "google_project_service" "cloud-run-lele-service" {
+resource "google_project_service" "gce-epxh-service" {
       disable_on_destroy = false
-      service = "run.googleapis.com"
+      service = "compute.googleapis.com"
 }
 
-
-variable "CLOUD_RUN_testtest" {
-    type = string
-    sensitive = true
-}
-
-variable "CLOUD_RUN_testtesttest" {
-    type = string
-    sensitive = true
-}
 
