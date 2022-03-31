@@ -1,38 +1,79 @@
 terraform {
   required_providers {
-    aws =  {
-    source = "hashicorp/aws"
-    version = ">= 2.7.0"
+    google =  {
+    source = "hashicorp/google"
+    version = ">= 4.10.0"
     }
   }
 }
 
-provider "aws" {
-    region = "us-west-2"
+provider "google" {
+    project = "devxp-339721"
+    region = "us-west1"
 }
 
-resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-dl6f56vzxwr4tm8emzfpdrmwhcgijr2r1w9t83weckmr2"
+resource "google_storage_bucket" "terraform_backend_bucket" {
+      location = "us-west1"
+      name = "terraform-state-r3s4u7q5xikz0puul7c2i5bjakgsjgq2mfxzr1ony6isz"
+      project = "devxp-339721"
 }
 
-resource "aws_iam_role" "Lambda-zgji-lambda-iam-role" {
-      name = "Lambda-zgji-lambda-iam-role"
-      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+resource "google_cloud_run_service" "test-run-devxp" {
+      name = "test-run-devxp"
+      location = "us-west1"
+      autogenerate_revision_name = true
+      template {
+        spec {
+          containers {
+            image = "gcr.io/devxp-339721/devxp:2faa0b7"
+            env {
+              name = "CONNECTION_STRING"
+              value = var.CLOUD_RUN_CONNECTION_STRING
+            }
+            env {
+              name = "GITHUB_CLIENT_ID"
+              value = var.CLOUD_RUN_GITHUB_CLIENT_ID
+            }
+            env {
+              name = "GITHUB_CLIENT_SECRET"
+              value = var.CLOUD_RUN_GITHUB_CLIENT_SECRET
+            }
+          }
+        }
+      }
+      traffic {
+        percent = 100
+        latest_revision = true
+      }
+      depends_on = [google_project_service.test-run-devxp-service]
 }
 
-resource "aws_lambda_function" "Lambda-zgji" {
-      function_name = "Lambda-zgji"
-      role = aws_iam_role.Lambda-zgji-lambda-iam-role.arn
-      filename = "outputs/myFile.js.zip"
-      runtime = "nodejs14.x"
-      source_code_hash = data.archive_file.Lambda-zgji-archive.output_base64sha256
-      handler = "myFile.main"
+resource "google_cloud_run_service_iam_member" "test-run-devxp-iam" {
+      service = google_cloud_run_service.test-run-devxp.name
+      location = google_cloud_run_service.test-run-devxp.location
+      project = google_cloud_run_service.test-run-devxp.project
+      role = "roles/run.invoker"
+      member = "allUsers"
 }
 
-data "archive_file" "Lambda-zgji-archive" {
-      type = "zip"
-      source_file = "myFile.js"
-      output_path = "outputs/myFile.js.zip"
+resource "google_project_service" "test-run-devxp-service" {
+      disable_on_destroy = false
+      service = "run.googleapis.com"
 }
 
+
+variable "CLOUD_RUN_CONNECTION_STRING" {
+    type = string
+    sensitive = true
+}
+
+variable "CLOUD_RUN_GITHUB_CLIENT_ID" {
+    type = string
+    sensitive = true
+}
+
+variable "CLOUD_RUN_GITHUB_CLIENT_SECRET" {
+    type = string
+    sensitive = true
+}
 
