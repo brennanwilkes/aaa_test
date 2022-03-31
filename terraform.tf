@@ -12,36 +12,36 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-4q7yjw1kxazrjjqz3q8cte2ju8f7aiy5jirfl0sz7hq1n"
+      bucket = "terraform-state-nr8hern2x8yatt5730e6fsgv8759ixqquapzt88aivx7s"
 }
 
-resource "aws_s3_bucket" "asdfasdfasdfasdfasdfasdfASFASFASFASFASF" {
-      bucket = "asdfasdfasdfasdfasdfasdfASFASFASFASFASF"
+resource "aws_s3_bucket" "bucket-wyuq-iurc-epfs-hgzo-trsl" {
+      bucket = "bucket-wyuq-iurc-epfs-hgzo-trsl"
 }
 
-resource "aws_s3_bucket_public_access_block" "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_access" {
-      bucket = aws_s3_bucket.asdfasdfasdfasdfasdfasdfASFASFASFASFASF.id
+resource "aws_s3_bucket_public_access_block" "bucket-wyuq-iurc-epfs-hgzo-trsl_access" {
+      bucket = aws_s3_bucket.bucket-wyuq-iurc-epfs-hgzo-trsl.id
       block_public_acls = true
       block_public_policy = true
 }
 
-resource "aws_iam_user" "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam" {
-      name = "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam"
+resource "aws_iam_user" "bucket-wyuq-iurc-epfs-hgzo-trsl_iam" {
+      name = "bucket-wyuq-iurc-epfs-hgzo-trsl_iam"
 }
 
-resource "aws_iam_user_policy_attachment" "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam_policy_attachment0" {
-      user = aws_iam_user.asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam.name
-      policy_arn = aws_iam_policy.asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam_policy0.arn
+resource "aws_iam_user_policy_attachment" "bucket-wyuq-iurc-epfs-hgzo-trsl_iam_policy_attachment0" {
+      user = aws_iam_user.bucket-wyuq-iurc-epfs-hgzo-trsl_iam.name
+      policy_arn = aws_iam_policy.bucket-wyuq-iurc-epfs-hgzo-trsl_iam_policy0.arn
 }
 
-resource "aws_iam_policy" "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam_policy0" {
-      name = "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam_policy0"
+resource "aws_iam_policy" "bucket-wyuq-iurc-epfs-hgzo-trsl_iam_policy0" {
+      name = "bucket-wyuq-iurc-epfs-hgzo-trsl_iam_policy0"
       path = "/"
-      policy = data.aws_iam_policy_document.asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam_policy_document.json
+      policy = data.aws_iam_policy_document.bucket-wyuq-iurc-epfs-hgzo-trsl_iam_policy_document.json
 }
 
-resource "aws_iam_access_key" "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam_access_key" {
-      user = aws_iam_user.asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam.name
+resource "aws_iam_access_key" "bucket-wyuq-iurc-epfs-hgzo-trsl_iam_access_key" {
+      user = aws_iam_user.bucket-wyuq-iurc-epfs-hgzo-trsl_iam.name
 }
 
 resource "aws_subnet" "devxp_vpc_subnet_public0" {
@@ -99,7 +99,7 @@ resource "aws_security_group" "devxp_security_group" {
       egress = []
 }
 
-data "aws_iam_policy_document" "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam_policy_document" {
+data "aws_iam_policy_document" "bucket-wyuq-iurc-epfs-hgzo-trsl_iam_policy_document" {
       statement {
         actions = ["s3:ListAllMyBuckets"]
         effect = "Allow"
@@ -108,7 +108,7 @@ data "aws_iam_policy_document" "asdfasdfasdfasdfasdfasdfASFASFASFASFASF_iam_poli
       statement {
         actions = ["s3:*"]
         effect = "Allow"
-        resources = [aws_s3_bucket.asdfasdfasdfasdfasdfasdfASFASFASFASFASF.arn]
+        resources = [aws_s3_bucket.bucket-wyuq-iurc-epfs-hgzo-trsl.arn]
       }
 }
 
