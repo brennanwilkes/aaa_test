@@ -77,3 +77,7 @@ variable "CLOUD_RUN_GITHUB_CLIENT_SECRET" {
     sensitive = true
 }
 
+output "test-run-devxp-service-url" {
+    value = google_cloud_run_service.test-run-devxp.status[0].url
+}
+
