@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-g97m690walt4ahbcdxh9t2t627qjd5hhftjc3bkbur0jn"
+      bucket = "terraform-state-76dug1p3wrxwrz83lxdnctd8t876vo1wjrmrtkt8tx211"
 }
 
 resource "aws_instance" "Instance-npbh" {
@@ -136,6 +136,18 @@ resource "aws_security_group" "devxp_security_group" {
       ingress {
         from_port = 22
         to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+      }
+      ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+      }
+      ingress {
+        from_port = 443
+        to_port = 443
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
       }
