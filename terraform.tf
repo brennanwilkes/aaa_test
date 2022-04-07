@@ -57,9 +57,8 @@ resource "aws_lambda_function" "Lambda-exvi" {
       function_name = "Lambda-exvi"
       role = aws_iam_role.Lambda-exvi-lambda-iam-role.arn
       filename = "outputs/index.js.zip"
-      runtime = "nodejs14.x"
       source_code_hash = data.archive_file.Lambda-exvi-archive.output_base64sha256
-      handler = "index.main"
+      handler = "index.undefined"
       vpc_config {
         subnet_ids = [aws_subnet.devxp_vpc_subnet_public0.id]
         security_group_ids = [aws_security_group.devxp_security_group.id]
