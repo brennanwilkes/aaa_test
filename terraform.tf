@@ -133,12 +133,7 @@ resource "aws_vpc" "devxp_vpc" {
 resource "aws_security_group" "devxp_security_group" {
       vpc_id = aws_vpc.devxp_vpc.id
       name = "devxp_security_group"
-      ingress {
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-      }
+      ingress = []
       egress {
         from_port = 80
         to_port = 80
