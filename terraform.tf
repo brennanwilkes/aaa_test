@@ -15,6 +15,42 @@ resource "aws_s3_bucket" "terraform_backend_bucket" {
       bucket = "terraform-state-dwz7yaaexi9yft4zrqa95mvfpgaybzyd07a6rsngxl27a"
 }
 
+resource "aws_instance" "Instance-ggsn" {
+      ami = data.aws_ami.amazon_latest.id
+      instance_type = "t2.medium"
+      lifecycle {
+        ignore_changes = [ami]
+      }
+      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
+      associate_public_ip_address = true
+      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
+      iam_instance_profile = aws_iam_instance_profile.Instance-ggsn_iam_role_instance_profile.name
+}
+
+resource "aws_eip" "Instance-ggsn_eip" {
+      vpc = true
+      instance = aws_instance.Instance-ggsn.id
+}
+
+resource "aws_iam_user" "Instance-ggsn_iam" {
+      name = "Instance-ggsn_iam"
+}
+
+resource "aws_iam_user_policy_attachment" "Instance-ggsn_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-ggsn_iam.name
+      policy_arn = aws_iam_policy.Instance-ggsn_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "Instance-ggsn_iam_policy0" {
+      name = "Instance-ggsn_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.Instance-ggsn_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "Instance-ggsn_iam_access_key" {
+      user = aws_iam_user.Instance-ggsn_iam.name
+}
+
 resource "aws_instance" "Instance-acwa-a" {
       ami = data.aws_ami.amazon_latest.id
       instance_type = "t2.medium"
@@ -49,42 +85,6 @@ resource "aws_iam_policy" "Instance-acwa-a_iam_policy0" {
 
 resource "aws_iam_access_key" "Instance-acwa-a_iam_access_key" {
       user = aws_iam_user.Instance-acwa-a_iam.name
-}
-
-resource "aws_instance" "Instance-acwa-b" {
-      ami = data.aws_ami.amazon_latest.id
-      instance_type = "t2.medium"
-      lifecycle {
-        ignore_changes = [ami]
-      }
-      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
-      associate_public_ip_address = true
-      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
-      iam_instance_profile = aws_iam_instance_profile.Instance-acwa-b_iam_role_instance_profile.name
-}
-
-resource "aws_eip" "Instance-acwa-b_eip" {
-      vpc = true
-      instance = aws_instance.Instance-acwa-b.id
-}
-
-resource "aws_iam_user" "Instance-acwa-b_iam" {
-      name = "Instance-acwa-b_iam"
-}
-
-resource "aws_iam_user_policy_attachment" "Instance-acwa-b_iam_policy_attachment0" {
-      user = aws_iam_user.Instance-acwa-b_iam.name
-      policy_arn = aws_iam_policy.Instance-acwa-b_iam_policy0.arn
-}
-
-resource "aws_iam_policy" "Instance-acwa-b_iam_policy0" {
-      name = "Instance-acwa-b_iam_policy0"
-      path = "/"
-      policy = data.aws_iam_policy_document.Instance-acwa-b_iam_policy_document.json
-}
-
-resource "aws_iam_access_key" "Instance-acwa-b_iam_access_key" {
-      user = aws_iam_user.Instance-acwa-b_iam.name
 }
 
 resource "aws_instance" "Instance-acwa-c" {
@@ -123,14 +123,14 @@ resource "aws_iam_access_key" "Instance-acwa-c_iam_access_key" {
       user = aws_iam_user.Instance-acwa-c_iam.name
 }
 
+resource "aws_iam_instance_profile" "Instance-ggsn_iam_role_instance_profile" {
+      name = "Instance-ggsn_iam_role_instance_profile"
+      role = aws_iam_role.Instance-ggsn_iam_role.name
+}
+
 resource "aws_iam_instance_profile" "Instance-acwa-a_iam_role_instance_profile" {
       name = "Instance-acwa-a_iam_role_instance_profile"
       role = aws_iam_role.Instance-acwa-a_iam_role.name
-}
-
-resource "aws_iam_instance_profile" "Instance-acwa-b_iam_role_instance_profile" {
-      name = "Instance-acwa-b_iam_role_instance_profile"
-      role = aws_iam_role.Instance-acwa-b_iam_role.name
 }
 
 resource "aws_iam_instance_profile" "Instance-acwa-c_iam_role_instance_profile" {
@@ -138,13 +138,13 @@ resource "aws_iam_instance_profile" "Instance-acwa-c_iam_role_instance_profile" 
       role = aws_iam_role.Instance-acwa-c_iam_role.name
 }
 
-resource "aws_iam_role" "Instance-acwa-a_iam_role" {
-      name = "Instance-acwa-a_iam_role"
+resource "aws_iam_role" "Instance-ggsn_iam_role" {
+      name = "Instance-ggsn_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
-resource "aws_iam_role" "Instance-acwa-b_iam_role" {
-      name = "Instance-acwa-b_iam_role"
+resource "aws_iam_role" "Instance-acwa-a_iam_role" {
+      name = "Instance-acwa-a_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
@@ -219,7 +219,7 @@ resource "aws_security_group" "devxp_security_group" {
       }
 }
 
-data "aws_iam_policy_document" "Instance-acwa-a_iam_policy_document" {
+data "aws_iam_policy_document" "Instance-ggsn_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -228,7 +228,7 @@ data "aws_iam_policy_document" "Instance-acwa-a_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.Instance-acwa-a.arn]
+        resources = [aws_instance.Instance-ggsn.arn]
       }
 }
 
@@ -245,7 +245,7 @@ data "aws_ami" "amazon_latest" {
       }
 }
 
-data "aws_iam_policy_document" "Instance-acwa-b_iam_policy_document" {
+data "aws_iam_policy_document" "Instance-acwa-a_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -254,7 +254,7 @@ data "aws_iam_policy_document" "Instance-acwa-b_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.Instance-acwa-b.arn]
+        resources = [aws_instance.Instance-acwa-a.arn]
       }
 }
 
