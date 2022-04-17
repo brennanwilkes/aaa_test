@@ -15,7 +15,7 @@ resource "aws_s3_bucket" "terraform_backend_bucket" {
       bucket = "terraform-state-bcztk2ix0f21vqzwu4890hj9zvgcrlthdtoxn4fx2u2be"
 }
 
-resource "aws_instance" "Instance-lnhh" {
+resource "aws_instance" "Instance-aphh" {
       ami = data.aws_ami.ubuntu_latest.id
       instance_type = "t2.micro"
       lifecycle {
@@ -24,40 +24,40 @@ resource "aws_instance" "Instance-lnhh" {
       subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
       associate_public_ip_address = true
       vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
-      iam_instance_profile = aws_iam_instance_profile.Instance-lnhh_iam_role_instance_profile.name
+      iam_instance_profile = aws_iam_instance_profile.Instance-aphh_iam_role_instance_profile.name
 }
 
-resource "aws_eip" "Instance-lnhh_eip" {
+resource "aws_eip" "Instance-aphh_eip" {
       vpc = true
-      instance = aws_instance.Instance-lnhh.id
+      instance = aws_instance.Instance-aphh.id
 }
 
-resource "aws_iam_user" "Instance-lnhh_iam" {
-      name = "Instance-lnhh_iam"
+resource "aws_iam_user" "Instance-aphh_iam" {
+      name = "Instance-aphh_iam"
 }
 
-resource "aws_iam_user_policy_attachment" "Instance-lnhh_iam_policy_attachment0" {
-      user = aws_iam_user.Instance-lnhh_iam.name
-      policy_arn = aws_iam_policy.Instance-lnhh_iam_policy0.arn
+resource "aws_iam_user_policy_attachment" "Instance-aphh_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-aphh_iam.name
+      policy_arn = aws_iam_policy.Instance-aphh_iam_policy0.arn
 }
 
-resource "aws_iam_policy" "Instance-lnhh_iam_policy0" {
-      name = "Instance-lnhh_iam_policy0"
+resource "aws_iam_policy" "Instance-aphh_iam_policy0" {
+      name = "Instance-aphh_iam_policy0"
       path = "/"
-      policy = data.aws_iam_policy_document.Instance-lnhh_iam_policy_document.json
+      policy = data.aws_iam_policy_document.Instance-aphh_iam_policy_document.json
 }
 
-resource "aws_iam_access_key" "Instance-lnhh_iam_access_key" {
-      user = aws_iam_user.Instance-lnhh_iam.name
+resource "aws_iam_access_key" "Instance-aphh_iam_access_key" {
+      user = aws_iam_user.Instance-aphh_iam.name
 }
 
-resource "aws_iam_instance_profile" "Instance-lnhh_iam_role_instance_profile" {
-      name = "Instance-lnhh_iam_role_instance_profile"
-      role = aws_iam_role.Instance-lnhh_iam_role.name
+resource "aws_iam_instance_profile" "Instance-aphh_iam_role_instance_profile" {
+      name = "Instance-aphh_iam_role_instance_profile"
+      role = aws_iam_role.Instance-aphh_iam_role.name
 }
 
-resource "aws_iam_role" "Instance-lnhh_iam_role" {
-      name = "Instance-lnhh_iam_role"
+resource "aws_iam_role" "Instance-aphh_iam_role" {
+      name = "Instance-aphh_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
@@ -127,7 +127,7 @@ resource "aws_security_group" "devxp_security_group" {
       }
 }
 
-data "aws_iam_policy_document" "Instance-lnhh_iam_policy_document" {
+data "aws_iam_policy_document" "Instance-aphh_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -136,7 +136,7 @@ data "aws_iam_policy_document" "Instance-lnhh_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.Instance-lnhh.arn]
+        resources = [aws_instance.Instance-aphh.arn]
       }
 }
 
