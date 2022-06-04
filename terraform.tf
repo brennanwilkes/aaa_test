@@ -1,65 +1,38 @@
 terraform {
   required_providers {
-    google =  {
-    source = "hashicorp/google"
-    version = ">= 4.10.0"
+    aws =  {
+    source = "hashicorp/aws"
+    version = ">= 2.7.0"
     }
   }
 }
 
-provider "google" {
-    project = "myproject"
-    region = "us-west1"
+provider "aws" {
+    region = "us-west-2"
 }
 
-resource "google_storage_bucket" "terraform_backend_bucket" {
-      location = "us-west1"
-      name = "terraform-state-ndef6ahvu37g8ojc3oiwt1fbqs3hjflub4vj2unrzv7og"
-      project = "myproject"
+resource "aws_s3_bucket" "terraform_backend_bucket" {
+      bucket = "terraform-state-9rxwi9n13v5pkqmddykjimrfr91pvxzl6l81ohjfhv0an"
 }
 
-resource "google_cloudfunctions_function" "Function-tuvk" {
-      name = "Function-tuvk"
-      runtime = "nodejs16"
-      available_memory_mb = 128
-      source_archive_bucket = google_storage_bucket.Function-tuvk-bucket.name
-      source_archive_object = google_storage_bucket_object.Function-tuvk-zip.name
-      trigger_http = true
-      entry_point = "main"
-      project = "myproject"
-      depends_on = [google_project_service.Function-tuvk-service]
+resource "aws_iam_role" "Lambda-ptom-lambda-iam-role" {
+      name = "Lambda-ptom-lambda-iam-role"
+      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
-resource "google_project_service" "Function-tuvk-service" {
-      disable_on_destroy = false
-      project = "myproject"
-      service = "cloudfunctions.googleapis.com"
+resource "aws_lambda_function" "Lambda-ptom" {
+      function_name = "Lambda-ptom"
+      role = aws_iam_role.Lambda-ptom-lambda-iam-role.arn
+      filename = "outputs/index.js.zip"
+      runtime = "nodejs14.x"
+      source_code_hash = data.archive_file.Lambda-ptom-archive.output_base64sha256
+      handler = "index.main"
 }
 
-resource "google_storage_bucket_object" "Function-tuvk-zip" {
-      name = "source.zip#${data.archive_file.Function-tuvk-archive.output_md5}"
-      bucket = google_storage_bucket.Function-tuvk-bucket.name
-      source = data.archive_file.Function-tuvk-archive.output_path
-}
-
-resource "google_storage_bucket" "Function-tuvk-bucket" {
-      name = "devxp-storage-bucket-for-func-function-tuvk"
-      location = "us-west1"
-      project = "myproject"
-}
-
-resource "google_cloudfunctions_function_iam_member" "invoker" {
-      project = google_cloudfunctions_function.Function-tuvk.project
-      region = google_cloudfunctions_function.Function-tuvk.region
-      cloud_function = google_cloudfunctions_function.Function-tuvk.name
-      role = "roles/cloudfunctions.invoker"
-      member = "allUsers"
-}
-
-data "archive_file" "Function-tuvk-archive" {
+data "archive_file" "Lambda-ptom-archive" {
       type = "zip"
-      source_dir = "./"
-      output_path = "/tmp/function-Function-tuvk.zip"
+      source_file = "index.js"
+      output_path = "outputs/index.js.zip"
 }
 
 
