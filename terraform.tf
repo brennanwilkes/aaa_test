@@ -15,7 +15,7 @@ resource "aws_s3_bucket" "terraform_backend_bucket" {
       bucket = "terraform-state-9rxwi9n13v5pkqmddykjimrfr91pvxzl6l81ohjfhv0an"
 }
 
-resource "aws_instance" "Instance-qosa" {
+resource "aws_instance" "Instance-biaw" {
       ami = data.aws_ami.ubuntu_latest.id
       instance_type = "t2.micro"
       lifecycle {
@@ -24,40 +24,40 @@ resource "aws_instance" "Instance-qosa" {
       subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
       associate_public_ip_address = true
       vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
-      iam_instance_profile = aws_iam_instance_profile.Instance-qosa_iam_role_instance_profile.name
+      iam_instance_profile = aws_iam_instance_profile.Instance-biaw_iam_role_instance_profile.name
 }
 
-resource "aws_eip" "Instance-qosa_eip" {
+resource "aws_eip" "Instance-biaw_eip" {
       vpc = true
-      instance = aws_instance.Instance-qosa.id
+      instance = aws_instance.Instance-biaw.id
 }
 
-resource "aws_iam_user" "Instance-qosa_iam" {
-      name = "Instance-qosa_iam"
+resource "aws_iam_user" "Instance-biaw_iam" {
+      name = "Instance-biaw_iam"
 }
 
-resource "aws_iam_user_policy_attachment" "Instance-qosa_iam_policy_attachment0" {
-      user = aws_iam_user.Instance-qosa_iam.name
-      policy_arn = aws_iam_policy.Instance-qosa_iam_policy0.arn
+resource "aws_iam_user_policy_attachment" "Instance-biaw_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-biaw_iam.name
+      policy_arn = aws_iam_policy.Instance-biaw_iam_policy0.arn
 }
 
-resource "aws_iam_policy" "Instance-qosa_iam_policy0" {
-      name = "Instance-qosa_iam_policy0"
+resource "aws_iam_policy" "Instance-biaw_iam_policy0" {
+      name = "Instance-biaw_iam_policy0"
       path = "/"
-      policy = data.aws_iam_policy_document.Instance-qosa_iam_policy_document.json
+      policy = data.aws_iam_policy_document.Instance-biaw_iam_policy_document.json
 }
 
-resource "aws_iam_access_key" "Instance-qosa_iam_access_key" {
-      user = aws_iam_user.Instance-qosa_iam.name
+resource "aws_iam_access_key" "Instance-biaw_iam_access_key" {
+      user = aws_iam_user.Instance-biaw_iam.name
 }
 
-resource "aws_iam_instance_profile" "Instance-qosa_iam_role_instance_profile" {
-      name = "Instance-qosa_iam_role_instance_profile"
-      role = aws_iam_role.Instance-qosa_iam_role.name
+resource "aws_iam_instance_profile" "Instance-biaw_iam_role_instance_profile" {
+      name = "Instance-biaw_iam_role_instance_profile"
+      role = aws_iam_role.Instance-biaw_iam_role.name
 }
 
-resource "aws_iam_role" "Instance-qosa_iam_role" {
-      name = "Instance-qosa_iam_role"
+resource "aws_iam_role" "Instance-biaw_iam_role" {
+      name = "Instance-biaw_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
@@ -127,7 +127,7 @@ resource "aws_security_group" "devxp_security_group" {
       }
 }
 
-data "aws_iam_policy_document" "Instance-qosa_iam_policy_document" {
+data "aws_iam_policy_document" "Instance-biaw_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -136,7 +136,7 @@ data "aws_iam_policy_document" "Instance-qosa_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.Instance-qosa.arn]
+        resources = [aws_instance.Instance-biaw.arn]
       }
 }
 
