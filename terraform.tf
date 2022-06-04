@@ -15,7 +15,7 @@ resource "aws_s3_bucket" "terraform_backend_bucket" {
       bucket = "terraform-state-9rxwi9n13v5pkqmddykjimrfr91pvxzl6l81ohjfhv0an"
 }
 
-resource "aws_instance" "Instance-ihul" {
+resource "aws_instance" "Instance-aqdq" {
       ami = data.aws_ami.ubuntu_latest.id
       instance_type = "t2.micro"
       lifecycle {
@@ -24,40 +24,40 @@ resource "aws_instance" "Instance-ihul" {
       subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
       associate_public_ip_address = true
       vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
-      iam_instance_profile = aws_iam_instance_profile.Instance-ihul_iam_role_instance_profile.name
+      iam_instance_profile = aws_iam_instance_profile.Instance-aqdq_iam_role_instance_profile.name
 }
 
-resource "aws_eip" "Instance-ihul_eip" {
+resource "aws_eip" "Instance-aqdq_eip" {
       vpc = true
-      instance = aws_instance.Instance-ihul.id
+      instance = aws_instance.Instance-aqdq.id
 }
 
-resource "aws_iam_user" "Instance-ihul_iam" {
-      name = "Instance-ihul_iam"
+resource "aws_iam_user" "Instance-aqdq_iam" {
+      name = "Instance-aqdq_iam"
 }
 
-resource "aws_iam_user_policy_attachment" "Instance-ihul_iam_policy_attachment0" {
-      user = aws_iam_user.Instance-ihul_iam.name
-      policy_arn = aws_iam_policy.Instance-ihul_iam_policy0.arn
+resource "aws_iam_user_policy_attachment" "Instance-aqdq_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-aqdq_iam.name
+      policy_arn = aws_iam_policy.Instance-aqdq_iam_policy0.arn
 }
 
-resource "aws_iam_policy" "Instance-ihul_iam_policy0" {
-      name = "Instance-ihul_iam_policy0"
+resource "aws_iam_policy" "Instance-aqdq_iam_policy0" {
+      name = "Instance-aqdq_iam_policy0"
       path = "/"
-      policy = data.aws_iam_policy_document.Instance-ihul_iam_policy_document.json
+      policy = data.aws_iam_policy_document.Instance-aqdq_iam_policy_document.json
 }
 
-resource "aws_iam_access_key" "Instance-ihul_iam_access_key" {
-      user = aws_iam_user.Instance-ihul_iam.name
+resource "aws_iam_access_key" "Instance-aqdq_iam_access_key" {
+      user = aws_iam_user.Instance-aqdq_iam.name
 }
 
-resource "aws_iam_instance_profile" "Instance-ihul_iam_role_instance_profile" {
-      name = "Instance-ihul_iam_role_instance_profile"
-      role = aws_iam_role.Instance-ihul_iam_role.name
+resource "aws_iam_instance_profile" "Instance-aqdq_iam_role_instance_profile" {
+      name = "Instance-aqdq_iam_role_instance_profile"
+      role = aws_iam_role.Instance-aqdq_iam_role.name
 }
 
-resource "aws_iam_role" "Instance-ihul_iam_role" {
-      name = "Instance-ihul_iam_role"
+resource "aws_iam_role" "Instance-aqdq_iam_role" {
+      name = "Instance-aqdq_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
@@ -127,7 +127,7 @@ resource "aws_security_group" "devxp_security_group" {
       }
 }
 
-data "aws_iam_policy_document" "Instance-ihul_iam_policy_document" {
+data "aws_iam_policy_document" "Instance-aqdq_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -136,7 +136,7 @@ data "aws_iam_policy_document" "Instance-ihul_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.Instance-ihul.arn]
+        resources = [aws_instance.Instance-aqdq.arn]
       }
 }
 
