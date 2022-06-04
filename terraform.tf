@@ -1,71 +1,65 @@
 terraform {
   required_providers {
-    aws =  {
-    source = "hashicorp/aws"
-    version = ">= 2.7.0"
+    google =  {
+    source = "hashicorp/google"
+    version = ">= 4.10.0"
     }
   }
 }
 
-provider "aws" {
-    region = "us-west-2"
+provider "google" {
+    project = "myproject"
+    region = "us-west1"
 }
 
-resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-5ebz1s3t342gpli3ozxh4x04i7gw8uqfywgz2k88yy0cx"
+resource "google_storage_bucket" "terraform_backend_bucket" {
+      location = "us-west1"
+      name = "terraform-state-ndef6ahvu37g8ojc3oiwt1fbqs3hjflub4vj2unrzv7og"
+      project = "myproject"
 }
 
-resource "aws_instance" "Instance-qteh" {
-      ami = data.aws_ami.ubuntu_latest.id
-      instance_type = "t2.micro"
-      lifecycle {
-        ignore_changes = [ami]
-      }
+resource "google_cloudfunctions_function" "Function-tuvk" {
+      name = "Function-tuvk"
+      runtime = "nodejs16"
+      available_memory_mb = 128
+      source_archive_bucket = google_storage_bucket.Function-tuvk-bucket.name
+      source_archive_object = google_storage_bucket_object.Function-tuvk-zip.name
+      trigger_http = true
+      entry_point = "main"
+      project = "myproject"
+      depends_on = [google_project_service.Function-tuvk-service]
 }
 
-resource "aws_iam_user" "Instance-qteh_iam" {
-      name = "Instance-qteh_iam"
+resource "google_project_service" "Function-tuvk-service" {
+      disable_on_destroy = false
+      project = "myproject"
+      service = "cloudfunctions.googleapis.com"
 }
 
-resource "aws_iam_user_policy_attachment" "Instance-qteh_iam_policy_attachment0" {
-      user = aws_iam_user.Instance-qteh_iam.name
-      policy_arn = aws_iam_policy.Instance-qteh_iam_policy0.arn
+resource "google_storage_bucket_object" "Function-tuvk-zip" {
+      name = "source.zip#${data.archive_file.Function-tuvk-archive.output_md5}"
+      bucket = google_storage_bucket.Function-tuvk-bucket.name
+      source = data.archive_file.Function-tuvk-archive.output_path
 }
 
-resource "aws_iam_policy" "Instance-qteh_iam_policy0" {
-      name = "Instance-qteh_iam_policy0"
-      path = "/"
-      policy = data.aws_iam_policy_document.Instance-qteh_iam_policy_document.json
+resource "google_storage_bucket" "Function-tuvk-bucket" {
+      name = "devxp-storage-bucket-for-func-function-tuvk"
+      location = "us-west1"
+      project = "myproject"
 }
 
-resource "aws_iam_access_key" "Instance-qteh_iam_access_key" {
-      user = aws_iam_user.Instance-qteh_iam.name
+resource "google_cloudfunctions_function_iam_member" "invoker" {
+      project = google_cloudfunctions_function.Function-tuvk.project
+      region = google_cloudfunctions_function.Function-tuvk.region
+      cloud_function = google_cloudfunctions_function.Function-tuvk.name
+      role = "roles/cloudfunctions.invoker"
+      member = "allUsers"
 }
 
-data "aws_iam_policy_document" "Instance-qteh_iam_policy_document" {
-      statement {
-        actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
-        effect = "Allow"
-        resources = ["arn:aws:ec2:::*"]
-      }
-      statement {
-        actions = ["iam:PassRole"]
-        effect = "Allow"
-        resources = [aws_instance.Instance-qteh.arn]
-      }
-}
-
-data "aws_ami" "ubuntu_latest" {
-      most_recent = true
-      owners = ["099720109477"]
-      filter {
-        name = "name"
-        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"]
-      }
-      filter {
-        name = "virtualization-type"
-        values = ["hvm"]
-      }
+data "archive_file" "Function-tuvk-archive" {
+      type = "zip"
+      source_dir = "./"
+      output_path = "/tmp/function-Function-tuvk.zip"
 }
 
 
