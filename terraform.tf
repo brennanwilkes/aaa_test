@@ -15,24 +15,57 @@ resource "aws_s3_bucket" "terraform_backend_bucket" {
       bucket = "terraform-state-9rxwi9n13v5pkqmddykjimrfr91pvxzl6l81ohjfhv0an"
 }
 
-resource "aws_iam_role" "Lambda-ptom-lambda-iam-role" {
-      name = "Lambda-ptom-lambda-iam-role"
-      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+resource "aws_instance" "Instance-ihul" {
+      ami = data.aws_ami.ubuntu_latest.id
+      instance_type = "t2.micro"
+      lifecycle {
+        ignore_changes = [ami]
+      }
 }
 
-resource "aws_lambda_function" "Lambda-ptom" {
-      function_name = "Lambda-ptom"
-      role = aws_iam_role.Lambda-ptom-lambda-iam-role.arn
-      filename = "outputs/index.js.zip"
-      runtime = "nodejs14.x"
-      source_code_hash = data.archive_file.Lambda-ptom-archive.output_base64sha256
-      handler = "index.main"
+resource "aws_iam_user" "Instance-ihul_iam" {
+      name = "Instance-ihul_iam"
 }
 
-data "archive_file" "Lambda-ptom-archive" {
-      type = "zip"
-      source_file = "index.js"
-      output_path = "outputs/index.js.zip"
+resource "aws_iam_user_policy_attachment" "Instance-ihul_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-ihul_iam.name
+      policy_arn = aws_iam_policy.Instance-ihul_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "Instance-ihul_iam_policy0" {
+      name = "Instance-ihul_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.Instance-ihul_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "Instance-ihul_iam_access_key" {
+      user = aws_iam_user.Instance-ihul_iam.name
+}
+
+data "aws_iam_policy_document" "Instance-ihul_iam_policy_document" {
+      statement {
+        actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
+        effect = "Allow"
+        resources = ["arn:aws:ec2:::*"]
+      }
+      statement {
+        actions = ["iam:PassRole"]
+        effect = "Allow"
+        resources = [aws_instance.Instance-ihul.arn]
+      }
+}
+
+data "aws_ami" "ubuntu_latest" {
+      most_recent = true
+      owners = ["099720109477"]
+      filter {
+        name = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"]
+      }
+      filter {
+        name = "virtualization-type"
+        values = ["hvm"]
+      }
 }
 
 
