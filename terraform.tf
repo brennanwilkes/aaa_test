@@ -1,18 +1,13 @@
-terraform {
-  required_providers {
-    aws =  {
-    source = "hashicorp/aws"
-    version = ">= 2.7.0"
-    }
-  }
+terraform = {
+  backend = {
+    s3 = {
+      bucket = "terraform-state-9rxwi9n13v5pkqmddykjimrfr91pvxzl6l81ohjfhv0an"
+      key = "terraform/state"
+      region = "us-west-2"
 }
 
 provider "aws" {
     region = "us-west-2"
-}
-
-resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-9rxwi9n13v5pkqmddykjimrfr91pvxzl6l81ohjfhv0an"
 }
 
 resource "aws_instance" "Instance-ifph" {
