@@ -46,6 +46,35 @@ resource "aws_iam_access_key" "Instance-hihu_iam_access_key" {
       user = aws_iam_user.Instance-hihu_iam.name
 }
 
+resource "aws_s3_bucket" "bucket-almz-mdpf-irmn-vqve-dcvt" {
+      bucket = "bucket-almz-mdpf-irmn-vqve-dcvt"
+}
+
+resource "aws_s3_bucket_public_access_block" "bucket-almz-mdpf-irmn-vqve-dcvt_access" {
+      bucket = aws_s3_bucket.bucket-almz-mdpf-irmn-vqve-dcvt.id
+      block_public_acls = true
+      block_public_policy = true
+}
+
+resource "aws_iam_user" "bucket-almz-mdpf-irmn-vqve-dcvt_iam" {
+      name = "bucket-almz-mdpf-irmn-vqve-dcvt_iam"
+}
+
+resource "aws_iam_user_policy_attachment" "bucket-almz-mdpf-irmn-vqve-dcvt_iam_policy_attachment0" {
+      user = aws_iam_user.bucket-almz-mdpf-irmn-vqve-dcvt_iam.name
+      policy_arn = aws_iam_policy.bucket-almz-mdpf-irmn-vqve-dcvt_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "bucket-almz-mdpf-irmn-vqve-dcvt_iam_policy0" {
+      name = "bucket-almz-mdpf-irmn-vqve-dcvt_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.bucket-almz-mdpf-irmn-vqve-dcvt_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "bucket-almz-mdpf-irmn-vqve-dcvt_iam_access_key" {
+      user = aws_iam_user.bucket-almz-mdpf-irmn-vqve-dcvt_iam.name
+}
+
 resource "aws_iam_instance_profile" "Instance-hihu_iam_role_instance_profile" {
       name = "Instance-hihu_iam_role_instance_profile"
       role = aws_iam_role.Instance-hihu_iam_role.name
@@ -54,6 +83,11 @@ resource "aws_iam_instance_profile" "Instance-hihu_iam_role_instance_profile" {
 resource "aws_iam_role" "Instance-hihu_iam_role" {
       name = "Instance-hihu_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+}
+
+resource "aws_iam_role_policy_attachment" "Instance-hihu_iam_role_bucket-almz-mdpf-irmn-vqve-dcvt_iam_policy0_attachment" {
+      policy_arn = aws_iam_policy.bucket-almz-mdpf-irmn-vqve-dcvt_iam_policy0.arn
+      role = aws_iam_role.Instance-hihu_iam_role.name
 }
 
 resource "aws_subnet" "devxp_vpc_subnet_public0" {
@@ -157,6 +191,19 @@ data "aws_ami" "ubuntu_latest" {
       filter {
         name = "virtualization-type"
         values = ["hvm"]
+      }
+}
+
+data "aws_iam_policy_document" "bucket-almz-mdpf-irmn-vqve-dcvt_iam_policy_document" {
+      statement {
+        actions = ["s3:ListAllMyBuckets"]
+        effect = "Allow"
+        resources = ["arn:aws:s3:::*"]
+      }
+      statement {
+        actions = ["s3:*"]
+        effect = "Allow"
+        resources = [aws_s3_bucket.bucket-almz-mdpf-irmn-vqve-dcvt.arn]
       }
 }
 
