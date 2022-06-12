@@ -10,7 +10,7 @@ provider "aws" {
     region = "us-west-2"
 }
 
-resource "aws_instance" "Instance-hihu" {
+resource "aws_instance" "myServer" {
       ami = data.aws_ami.ubuntu_latest.id
       instance_type = "t2.micro"
       lifecycle {
@@ -19,40 +19,40 @@ resource "aws_instance" "Instance-hihu" {
       subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
       associate_public_ip_address = true
       vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
-      iam_instance_profile = aws_iam_instance_profile.Instance-hihu_iam_role_instance_profile.name
+      iam_instance_profile = aws_iam_instance_profile.myServer_iam_role_instance_profile.name
 }
 
-resource "aws_eip" "Instance-hihu_eip" {
+resource "aws_eip" "myServer_eip" {
       vpc = true
-      instance = aws_instance.Instance-hihu.id
+      instance = aws_instance.myServer.id
 }
 
-resource "aws_iam_user" "Instance-hihu_iam" {
-      name = "Instance-hihu_iam"
+resource "aws_iam_user" "myServer_iam" {
+      name = "myServer_iam"
 }
 
-resource "aws_iam_user_policy_attachment" "Instance-hihu_iam_policy_attachment0" {
-      user = aws_iam_user.Instance-hihu_iam.name
-      policy_arn = aws_iam_policy.Instance-hihu_iam_policy0.arn
+resource "aws_iam_user_policy_attachment" "myServer_iam_policy_attachment0" {
+      user = aws_iam_user.myServer_iam.name
+      policy_arn = aws_iam_policy.myServer_iam_policy0.arn
 }
 
-resource "aws_iam_policy" "Instance-hihu_iam_policy0" {
-      name = "Instance-hihu_iam_policy0"
+resource "aws_iam_policy" "myServer_iam_policy0" {
+      name = "myServer_iam_policy0"
       path = "/"
-      policy = data.aws_iam_policy_document.Instance-hihu_iam_policy_document.json
+      policy = data.aws_iam_policy_document.myServer_iam_policy_document.json
 }
 
-resource "aws_iam_access_key" "Instance-hihu_iam_access_key" {
-      user = aws_iam_user.Instance-hihu_iam.name
+resource "aws_iam_access_key" "myServer_iam_access_key" {
+      user = aws_iam_user.myServer_iam.name
 }
 
-resource "aws_iam_instance_profile" "Instance-hihu_iam_role_instance_profile" {
-      name = "Instance-hihu_iam_role_instance_profile"
-      role = aws_iam_role.Instance-hihu_iam_role.name
+resource "aws_iam_instance_profile" "myServer_iam_role_instance_profile" {
+      name = "myServer_iam_role_instance_profile"
+      role = aws_iam_role.myServer_iam_role.name
 }
 
-resource "aws_iam_role" "Instance-hihu_iam_role" {
-      name = "Instance-hihu_iam_role"
+resource "aws_iam_role" "myServer_iam_role" {
+      name = "myServer_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
@@ -134,7 +134,7 @@ resource "aws_security_group" "devxp_security_group" {
       }
 }
 
-data "aws_iam_policy_document" "Instance-hihu_iam_policy_document" {
+data "aws_iam_policy_document" "myServer_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -143,7 +143,7 @@ data "aws_iam_policy_document" "Instance-hihu_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.Instance-hihu.arn]
+        resources = [aws_instance.myServer.arn]
       }
 }
 
@@ -161,4 +161,7 @@ data "aws_ami" "ubuntu_latest" {
 }
 
 
+output "myServer_eip-public-ip" {
+    value = aws_eip.myServer_eip.*.public_ip
+}
 
