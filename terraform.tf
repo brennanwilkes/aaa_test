@@ -10,60 +10,6 @@ provider "aws" {
     region = "us-west-2"
 }
 
-resource "aws_instance" "myInstance-b" {
-      ami = data.aws_ami.ubuntu_latest.id
-      instance_type = "t2.small"
-      lifecycle {
-        ignore_changes = [ami]
-      }
-      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
-      associate_public_ip_address = true
-      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
-      iam_instance_profile = aws_iam_instance_profile.myInstance-b_iam_role_instance_profile.name
-      key_name = "myInstance-b_keyPair"
-}
-
-resource "aws_eip" "myInstance-b_eip" {
-      vpc = true
-      instance = aws_instance.myInstance-b.id
-}
-
-resource "tls_private_key" "myInstance-b_keyPair_tls_key" {
-      algorithm = "RSA"
-      rsa_bits = 4096
-}
-
-resource "aws_key_pair" "myInstance-b_keyPair" {
-      public_key = tls_private_key.myInstance-b_keyPair_tls_key.public_key_openssh
-      key_name = "myInstance-b_keyPair"
-}
-
-resource "local_sensitive_file" "myInstance-b_keyPair_pem_file" {
-      filename = pathexpand("~/.ssh/myInstance-b_keyPair.pem")
-      file_permission = "600"
-      directory_permission = "700"
-      content = tls_private_key.myInstance-b_keyPair_tls_key.private_key_pem
-}
-
-resource "aws_iam_user" "myInstance-b_iam" {
-      name = "myInstance-b_iam"
-}
-
-resource "aws_iam_user_policy_attachment" "myInstance-b_iam_policy_attachment0" {
-      user = aws_iam_user.myInstance-b_iam.name
-      policy_arn = aws_iam_policy.myInstance-b_iam_policy0.arn
-}
-
-resource "aws_iam_policy" "myInstance-b_iam_policy0" {
-      name = "myInstance-b_iam_policy0"
-      path = "/"
-      policy = data.aws_iam_policy_document.myInstance-b_iam_policy_document.json
-}
-
-resource "aws_iam_access_key" "myInstance-b_iam_access_key" {
-      user = aws_iam_user.myInstance-b_iam.name
-}
-
 resource "aws_instance" "myInstance-a" {
       ami = data.aws_ami.ubuntu_latest.id
       instance_type = "t2.small"
@@ -118,9 +64,58 @@ resource "aws_iam_access_key" "myInstance-a_iam_access_key" {
       user = aws_iam_user.myInstance-a_iam.name
 }
 
-resource "aws_iam_instance_profile" "myInstance-b_iam_role_instance_profile" {
-      name = "myInstance-b_iam_role_instance_profile"
-      role = aws_iam_role.myInstance-b_iam_role.name
+resource "aws_instance" "myInstance-b" {
+      ami = data.aws_ami.ubuntu_latest.id
+      instance_type = "t2.small"
+      lifecycle {
+        ignore_changes = [ami]
+      }
+      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
+      associate_public_ip_address = true
+      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
+      iam_instance_profile = aws_iam_instance_profile.myInstance-b_iam_role_instance_profile.name
+      key_name = "myInstance-b_keyPair"
+}
+
+resource "aws_eip" "myInstance-b_eip" {
+      vpc = true
+      instance = aws_instance.myInstance-b.id
+}
+
+resource "tls_private_key" "myInstance-b_keyPair_tls_key" {
+      algorithm = "RSA"
+      rsa_bits = 4096
+}
+
+resource "aws_key_pair" "myInstance-b_keyPair" {
+      public_key = tls_private_key.myInstance-b_keyPair_tls_key.public_key_openssh
+      key_name = "myInstance-b_keyPair"
+}
+
+resource "local_sensitive_file" "myInstance-b_keyPair_pem_file" {
+      filename = pathexpand("~/.ssh/myInstance-b_keyPair.pem")
+      file_permission = "600"
+      directory_permission = "700"
+      content = tls_private_key.myInstance-b_keyPair_tls_key.private_key_pem
+}
+
+resource "aws_iam_user" "myInstance-b_iam" {
+      name = "myInstance-b_iam"
+}
+
+resource "aws_iam_user_policy_attachment" "myInstance-b_iam_policy_attachment0" {
+      user = aws_iam_user.myInstance-b_iam.name
+      policy_arn = aws_iam_policy.myInstance-b_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "myInstance-b_iam_policy0" {
+      name = "myInstance-b_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.myInstance-b_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "myInstance-b_iam_access_key" {
+      user = aws_iam_user.myInstance-b_iam.name
 }
 
 resource "aws_iam_instance_profile" "myInstance-a_iam_role_instance_profile" {
@@ -128,13 +123,18 @@ resource "aws_iam_instance_profile" "myInstance-a_iam_role_instance_profile" {
       role = aws_iam_role.myInstance-a_iam_role.name
 }
 
-resource "aws_iam_role" "myInstance-b_iam_role" {
-      name = "myInstance-b_iam_role"
-      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+resource "aws_iam_instance_profile" "myInstance-b_iam_role_instance_profile" {
+      name = "myInstance-b_iam_role_instance_profile"
+      role = aws_iam_role.myInstance-b_iam_role.name
 }
 
 resource "aws_iam_role" "myInstance-a_iam_role" {
       name = "myInstance-a_iam_role"
+      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+}
+
+resource "aws_iam_role" "myInstance-b_iam_role" {
+      name = "myInstance-b_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
@@ -216,7 +216,7 @@ resource "aws_security_group" "devxp_security_group" {
       }
 }
 
-data "aws_iam_policy_document" "myInstance-b_iam_policy_document" {
+data "aws_iam_policy_document" "myInstance-a_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -225,7 +225,7 @@ data "aws_iam_policy_document" "myInstance-b_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.myInstance-b.arn]
+        resources = [aws_instance.myInstance-a.arn]
       }
 }
 
@@ -242,7 +242,7 @@ data "aws_ami" "ubuntu_latest" {
       }
 }
 
-data "aws_iam_policy_document" "myInstance-a_iam_policy_document" {
+data "aws_iam_policy_document" "myInstance-b_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -251,25 +251,10 @@ data "aws_iam_policy_document" "myInstance-a_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.myInstance-a.arn]
+        resources = [aws_instance.myInstance-b.arn]
       }
 }
 
-
-output "myInstance-b_eip-public-ip" {
-    value = aws_eip.myInstance-b_eip.public_ip
-    sensitive = false
-}
-
-output "myInstance-b_keyPair-private_key" {
-    value = tls_private_key.myInstance-b_keyPair_tls_key.private_key_pem
-    sensitive = true
-}
-
-output "myInstance-b-ssh_instructions" {
-    value = "To access myInstance-b, use: ssh -i ~/.ssh/myInstance-b_keyPair.pem ubuntu@<OUTPUTTED_IP)>"
-    sensitive = false
-}
 
 output "myInstance-a_eip-public-ip" {
     value = aws_eip.myInstance-a_eip.public_ip
@@ -283,6 +268,21 @@ output "myInstance-a_keyPair-private_key" {
 
 output "myInstance-a-ssh_instructions" {
     value = "To access myInstance-a, use: ssh -i ~/.ssh/myInstance-a_keyPair.pem ubuntu@<OUTPUTTED_IP)>"
+    sensitive = false
+}
+
+output "myInstance-b_eip-public-ip" {
+    value = aws_eip.myInstance-b_eip.public_ip
+    sensitive = false
+}
+
+output "myInstance-b_keyPair-private_key" {
+    value = tls_private_key.myInstance-b_keyPair_tls_key.private_key_pem
+    sensitive = true
+}
+
+output "myInstance-b-ssh_instructions" {
+    value = "To access myInstance-b, use: ssh -i ~/.ssh/myInstance-b_keyPair.pem ubuntu@<OUTPUTTED_IP)>"
     sensitive = false
 }
 
