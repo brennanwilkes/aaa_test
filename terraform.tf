@@ -93,7 +93,7 @@ resource "aws_key_pair" "myInstance-b_keyPair" {
 }
 
 resource "local_sensitive_file" "myInstance-b_keyPair_pem_file" {
-      filename = pathexpand(\"~/.ssh/myInstance-b_keyPair.pem\")
+      filename = pathexpand("~/.ssh/myInstance-b_keyPair.pem")
       file_permission = "600"
       directory_permission = "700"
       content = tls_private_key.myInstance-b_keyPair_tls_key.private_key_pem
