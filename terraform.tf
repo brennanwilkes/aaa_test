@@ -20,6 +20,7 @@ resource "aws_instance" "myServer" {
       associate_public_ip_address = true
       vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
       iam_instance_profile = aws_iam_instance_profile.myServer_iam_role_instance_profile.name
+      key_name = "myServer_keyPair"
 }
 
 resource "aws_eip" "myServer_eip" {
@@ -38,7 +39,7 @@ resource "aws_key_pair" "myServer_keyPair" {
 }
 
 resource "local_sensitive_file" "myServer_keyPair_pem_file" {
-      filename = pathexpand(\"~/.ssh/myServer_keyPair.pem)\"
+      filename = pathexpand("~/.ssh/myServer_keyPair.pem")
       file_permission = "600"
       directory_permission = "700"
       content = tls_private_key.myServer_keyPair_tls_key.private_key_pem
