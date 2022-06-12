@@ -27,6 +27,16 @@ resource "aws_eip" "myServer_eip" {
       instance = aws_instance.myServer.id
 }
 
+resource "tls_private_key" "myServer_keyPair_tls_key" {
+      algorithm = "RSA"
+      rsa_bits = 4096
+}
+
+resource "aws_key_pair" "myServer_keyPair" {
+      key_name = tls_private_key.myServer_keyPair_tls_key.public_key_openssh
+      public_key = "publicKey"
+}
+
 resource "aws_iam_user" "myServer_iam" {
       name = "myServer_iam"
 }
@@ -161,7 +171,18 @@ data "aws_ami" "ubuntu_latest" {
 }
 
 
+output "myServer-public-ip" {
+    value = aws_instance.myServer.public_ip
+    sensitive = false
+}
+
 output "myServer_eip-public-ip" {
     value = aws_eip.myServer_eip.*.public_ip
+    sensitive = false
+}
+
+output "myServer_keyPair-private_key" {
+    value = tls_private_key.myServer_keyPair_tls_key.private_key_pem
+    sensitive = true
 }
 
