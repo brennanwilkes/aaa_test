@@ -10,7 +10,7 @@ provider "aws" {
     region = "us-west-2"
 }
 
-resource "aws_instance" "myServer" {
+resource "aws_instance" "Instance-ljod" {
       ami = data.aws_ami.ubuntu_latest.id
       instance_type = "t2.micro"
       lifecycle {
@@ -19,57 +19,57 @@ resource "aws_instance" "myServer" {
       subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
       associate_public_ip_address = true
       vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
-      iam_instance_profile = aws_iam_instance_profile.myServer_iam_role_instance_profile.name
+      iam_instance_profile = aws_iam_instance_profile.Instance-ljod_iam_role_instance_profile.name
 }
 
-resource "aws_eip" "myServer_eip" {
+resource "aws_eip" "Instance-ljod_eip" {
       vpc = true
-      instance = aws_instance.myServer.id
+      instance = aws_instance.Instance-ljod.id
 }
 
-resource "tls_private_key" "myServer_keyPair_tls_key" {
+resource "tls_private_key" "Instance-ljod_keyPair_tls_key" {
       algorithm = "RSA"
       rsa_bits = 4096
 }
 
-resource "aws_key_pair" "myServer_keyPair" {
-      public_key = tls_private_key.myServer_keyPair_tls_key.public_key_openssh
-      key_name = "myServer_keyPair"
+resource "aws_key_pair" "Instance-ljod_keyPair" {
+      public_key = tls_private_key.Instance-ljod_keyPair_tls_key.public_key_openssh
+      key_name = "Instance-ljod_keyPair"
 }
 
-resource "local_file" "myServer_keyPair_pem_file" {
-      filename = "pathexpand(~/.ssh/myServer_keyPair.pem)"
+resource "local_sensitive_file" "Instance-ljod_keyPair_pem_file" {
+      filename = "pathexpand(~/.ssh/Instance-ljod_keyPair.pem)"
       file_permission = "600"
       directory_permission = "700"
-      sensitive_content = "${tls_private_key.myServer_keyPair_tls_key}.private_key_pem}"
+      content = tls_private_key.Instance-ljod_keyPair_tls_key.private_key_pem
 }
 
-resource "aws_iam_user" "myServer_iam" {
-      name = "myServer_iam"
+resource "aws_iam_user" "Instance-ljod_iam" {
+      name = "Instance-ljod_iam"
 }
 
-resource "aws_iam_user_policy_attachment" "myServer_iam_policy_attachment0" {
-      user = aws_iam_user.myServer_iam.name
-      policy_arn = aws_iam_policy.myServer_iam_policy0.arn
+resource "aws_iam_user_policy_attachment" "Instance-ljod_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-ljod_iam.name
+      policy_arn = aws_iam_policy.Instance-ljod_iam_policy0.arn
 }
 
-resource "aws_iam_policy" "myServer_iam_policy0" {
-      name = "myServer_iam_policy0"
+resource "aws_iam_policy" "Instance-ljod_iam_policy0" {
+      name = "Instance-ljod_iam_policy0"
       path = "/"
-      policy = data.aws_iam_policy_document.myServer_iam_policy_document.json
+      policy = data.aws_iam_policy_document.Instance-ljod_iam_policy_document.json
 }
 
-resource "aws_iam_access_key" "myServer_iam_access_key" {
-      user = aws_iam_user.myServer_iam.name
+resource "aws_iam_access_key" "Instance-ljod_iam_access_key" {
+      user = aws_iam_user.Instance-ljod_iam.name
 }
 
-resource "aws_iam_instance_profile" "myServer_iam_role_instance_profile" {
-      name = "myServer_iam_role_instance_profile"
-      role = aws_iam_role.myServer_iam_role.name
+resource "aws_iam_instance_profile" "Instance-ljod_iam_role_instance_profile" {
+      name = "Instance-ljod_iam_role_instance_profile"
+      role = aws_iam_role.Instance-ljod_iam_role.name
 }
 
-resource "aws_iam_role" "myServer_iam_role" {
-      name = "myServer_iam_role"
+resource "aws_iam_role" "Instance-ljod_iam_role" {
+      name = "Instance-ljod_iam_role"
       assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
 }
 
@@ -151,7 +151,7 @@ resource "aws_security_group" "devxp_security_group" {
       }
 }
 
-data "aws_iam_policy_document" "myServer_iam_policy_document" {
+data "aws_iam_policy_document" "Instance-ljod_iam_policy_document" {
       statement {
         actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
         effect = "Allow"
@@ -160,7 +160,7 @@ data "aws_iam_policy_document" "myServer_iam_policy_document" {
       statement {
         actions = ["iam:PassRole"]
         effect = "Allow"
-        resources = [aws_instance.myServer.arn]
+        resources = [aws_instance.Instance-ljod.arn]
       }
 }
 
@@ -178,18 +178,18 @@ data "aws_ami" "ubuntu_latest" {
 }
 
 
-output "myServer-public-ip" {
-    value = aws_instance.myServer.public_ip
+output "Instance-ljod-public-ip" {
+    value = aws_instance.Instance-ljod.public_ip
     sensitive = false
 }
 
-output "myServer_eip-public-ip" {
-    value = aws_eip.myServer_eip.*.public_ip
+output "Instance-ljod_eip-public-ip" {
+    value = aws_eip.Instance-ljod_eip.*.public_ip
     sensitive = false
 }
 
-output "myServer_keyPair-private_key" {
-    value = tls_private_key.myServer_keyPair_tls_key.private_key_pem
+output "Instance-ljod_keyPair-private_key" {
+    value = tls_private_key.Instance-ljod_keyPair_tls_key.private_key_pem
     sensitive = true
 }
 
