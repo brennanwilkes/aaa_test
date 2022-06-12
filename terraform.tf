@@ -38,10 +38,10 @@ resource "aws_key_pair" "myServer_keyPair" {
 }
 
 resource "local_file" "myServer_keyPair_pem_file" {
-      filename = "pathexpand("~/.ssh/${myServer_keyPair_tls_key}.pem")"
+      filename = "pathexpand(~/.ssh/${local.myServer_keyPair_tls_key}.pem)"
       file_permission = "600"
       directory_permission = "700"
-      sensitive_content = tls_private_key.ssh.private_key_pem
+      sensitive_content = "${tls_private_key.myServer_keyPair_tls_key}.private_key_pem}"
 }
 
 resource "aws_iam_user" "myServer_iam" {
