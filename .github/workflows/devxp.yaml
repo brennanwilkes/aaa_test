@@ -1,0 +1,41 @@
+
+name: 🖥️ DevXP Deployment Pipeline 🚀
+
+on:
+  push:
+    branches:
+      - main
+      - "**/**.tf"
+      - .github/workflows/devxp.yml
+
+jobs:
+  
+  
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Install Terraform 🟪'
+      uses: hashicorp/setup-terraform@v1
+  
+    - name: 'checkout 🕵'
+      id: 'checkout'
+      uses: actions/checkout@v2
+  
+  
+    - name: 'auth 🔑'
+      id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}'
+  
+    - name: 'Set up Cloud SDK ☁️'
+      uses: 'google-github-actions/setup-gcloud@v0'
+  
+  
+    - name: 'Setup terraform 🟪'
+      run: 'terraform init'
+  
+  
+    - name: 'Terraform Apply 🚀'
+      run: 'terraform apply -auto-approve'
+  
