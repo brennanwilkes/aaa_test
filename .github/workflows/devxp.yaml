@@ -21,21 +21,24 @@ jobs:
       id: 'checkout'
       uses: actions/checkout@v2
   
+    - name: 'Get State Artifact 💾'
+      id: 'art-get'
+      uses: actions/download-artifact@v3
+      with:
+        name: terraform-state
+  
   
   
     - name: 'Setup terraform 🟪'
-      run: 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} terraform init'
+      run: 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} terraform init -migrate-state -force-copy'
   
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  
+    - name: 'Create State Artifact 💾'
+      id: 'art-set'
+      uses: actions/upload-artifact@v2
+      with:
+        name: terraform-state
+        path: terraform.tfstate
   
     - name: 'Terraform Apply 🚀'
       run: 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} terraform apply -auto-approve'
-  
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  
   
