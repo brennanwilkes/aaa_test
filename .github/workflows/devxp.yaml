@@ -22,11 +22,12 @@ jobs:
       uses: actions/checkout@v2
   
     - name: 'Cache Terraform State 💾'
-      id: cache-state
+      id: cache-state-get
       uses: actions/cache@v3
       with:
         path: terraform.tfstate
         key: ${{ runner.os }}-state
+  
     - name: 'debug'
       run: ls -al && pwd
   
@@ -36,7 +37,7 @@ jobs:
       run: 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} terraform init -migrate-state -force-copy'
   
     - name: 'Cache Terraform State 💾'
-      id: cache-state
+      id: cache-state-set
       uses: actions/cache@v3
       with:
         path: terraform.tfstate
