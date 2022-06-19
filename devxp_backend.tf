@@ -2,6 +2,10 @@ resource "aws_s3_bucket" "terraform_backend_bucket" {
       bucket = "terraform-state-8abgyu1531iuxlohl6dog6r3j0slg7t4eny2eq8wwj577"
 }
 
+provider "aws" {
+    region = "us-west-2"
+}
+
 terraform {
   required_providers {
     aws =  {
