@@ -6,15 +6,6 @@ terraform {
   }
 }
 
-resource "aws_s3_bucket" "bucket-uxgl-rxsj-rxpa-kmrt-zdke" {
-      bucket = "bucket-uxgl-rxsj-rxpa-kmrt-zdke"
-}
-
-resource "aws_s3_bucket_public_access_block" "bucket-uxgl-rxsj-rxpa-kmrt-zdke_access" {
-      bucket = aws_s3_bucket.bucket-uxgl-rxsj-rxpa-kmrt-zdke.id
-      block_public_acls = true
-      block_public_policy = true
-}
 
 
 
