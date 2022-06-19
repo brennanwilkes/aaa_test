@@ -21,6 +21,12 @@ jobs:
       id: 'checkout'
       uses: actions/checkout@v2
   
+    - name: 'Cache Terraform State 💾'
+      id: cache-state
+      uses: actions/cache@v3
+      with:
+        path: terraform.tfstate
+        key: ${{ runner.os }}-state
     - name: 'debug'
       run: ls -al && pwd
   
