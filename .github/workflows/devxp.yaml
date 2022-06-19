@@ -28,9 +28,6 @@ jobs:
         path: terraform.tfstate
         key: ${{ runner.os }}-state
   
-    - name: 'debug'
-      run: ls -al && pwd
-  
   
   
     - name: 'Setup terraform 🟪'
