@@ -1,8 +1,7 @@
 terraform {
-  backend "s3" {
-      bucket = "terraform-state-8abgyu1531iuxlohl6dog6r3j0slg7t4eny2eq8wwj577"
-      key = "terraform/state"
-      region = "us-west-2"
+  backend "gcs" {
+      bucket = "terraform-state-5m7bmnhw5n6g5qutqujs3u0v88ae4bmm4iw4vuxgwkqxe"
+      prefix = "terraform/state"
   }
 }
 
