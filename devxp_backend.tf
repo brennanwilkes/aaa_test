@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "terraform_backend_bucket" {
-      bucket = "terraform-state-8abgyu1531iuxlohl6dog6r3j0slg7t4eny2eq8wwj577"
+      bucket = "terraform-state-gu6nzauqnrhpm5yjzd4n19c964ihfgpogobyqgpr4yccb"
 }
 
 terraform {
