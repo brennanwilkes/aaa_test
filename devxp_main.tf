@@ -1,30 +1,63 @@
 terraform {
-  backend "gcs" {
-      bucket = "terraform-state-mnyeatwurutddb6fiauscwkvseww9fjhd71l041bw7tyq"
-      prefix = "terraform/state"
+  backend "s3" {
+      bucket = "terraform-state-yll5dxd1nesgmp8k21rukrhcvkrhoflmsr8y9sfmecmrb"
+      key = "terraform/state"
+      region = "us-west-2"
   }
 }
 
-resource "google_compute_instance" "gce-ngtt" {
-      name = "gce-ngtt"
-      machine_type = "f1-micro"
-      zone = "us-west1-a"
-      network_interface {
-        network = "default"
+resource "aws_instance" "Instance-obws" {
+      ami = data.aws_ami.ubuntu_latest.id
+      instance_type = "t2.micro"
+      lifecycle {
+        ignore_changes = [ami]
       }
-      boot_disk {
-        initialize_params {
-          image = "ubuntu-2004-focal-v20220204"
-        }
-      }
-      project = "myproject"
 }
 
-resource "google_project_service" "gce-ngtt-service" {
-      disable_on_destroy = false
-      service = "compute.googleapis.com"
+resource "aws_iam_user" "Instance-obws_iam" {
+      name = "Instance-obws_iam"
 }
 
+resource "aws_iam_user_policy_attachment" "Instance-obws_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-obws_iam.name
+      policy_arn = aws_iam_policy.Instance-obws_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "Instance-obws_iam_policy0" {
+      name = "Instance-obws_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.Instance-obws_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "Instance-obws_iam_access_key" {
+      user = aws_iam_user.Instance-obws_iam.name
+}
+
+data "aws_iam_policy_document" "Instance-obws_iam_policy_document" {
+      statement {
+        actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
+        effect = "Allow"
+        resources = ["arn:aws:ec2:::*"]
+      }
+      statement {
+        actions = ["iam:PassRole"]
+        effect = "Allow"
+        resources = [aws_instance.Instance-obws.arn]
+      }
+}
+
+data "aws_ami" "ubuntu_latest" {
+      most_recent = true
+      owners = ["099720109477"]
+      filter {
+        name = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"]
+      }
+      filter {
+        name = "virtualization-type"
+        values = ["hvm"]
+      }
+}
 
 
 
