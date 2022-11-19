@@ -6,6 +6,45 @@ terraform {
   }
 }
 
+resource "aws_instance" "Instance-ebvr" {
+      ami = data.aws_ami.ubuntu_latest.id
+      instance_type = "t2.micro"
+      tags = {
+        Name = "Instance-ebvr"
+      }
+      lifecycle {
+        ignore_changes = [ami]
+      }
+      subnet_id = aws_subnet.devxp_vpc_subnet_public0.id
+      associate_public_ip_address = true
+      vpc_security_group_ids = [aws_security_group.devxp_security_group.id]
+      iam_instance_profile = aws_iam_instance_profile.Instance-ebvr_iam_role_instance_profile.name
+}
+
+resource "aws_eip" "Instance-ebvr_eip" {
+      vpc = true
+      instance = aws_instance.Instance-ebvr.id
+}
+
+resource "aws_iam_user" "Instance-ebvr_iam" {
+      name = "Instance-ebvr_iam"
+}
+
+resource "aws_iam_user_policy_attachment" "Instance-ebvr_iam_policy_attachment0" {
+      user = aws_iam_user.Instance-ebvr_iam.name
+      policy_arn = aws_iam_policy.Instance-ebvr_iam_policy0.arn
+}
+
+resource "aws_iam_policy" "Instance-ebvr_iam_policy0" {
+      name = "Instance-ebvr_iam_policy0"
+      path = "/"
+      policy = data.aws_iam_policy_document.Instance-ebvr_iam_policy_document.json
+}
+
+resource "aws_iam_access_key" "Instance-ebvr_iam_access_key" {
+      user = aws_iam_user.Instance-ebvr_iam.name
+}
+
 resource "aws_dynamodb_table" "DynamoDb-ewqh" {
       name = "DynamoDb-ewqh"
       hash_key = "userId"
@@ -155,6 +194,21 @@ resource "aws_iam_role_policy_attachment" "lambda-create-account-vpc-policy-atta
       role = aws_iam_role.lambda-create-account-lambda-iam-role.name
 }
 
+resource "aws_iam_instance_profile" "Instance-ebvr_iam_role_instance_profile" {
+      name = "Instance-ebvr_iam_role_instance_profile"
+      role = aws_iam_role.Instance-ebvr_iam_role.name
+}
+
+resource "aws_iam_role" "Instance-ebvr_iam_role" {
+      name = "Instance-ebvr_iam_role"
+      assume_role_policy = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n    }\n  ]\n}"
+}
+
+resource "aws_iam_role_policy_attachment" "Instance-ebvr_iam_role_DynamoDb-ewqh_iam_policy0_attachment" {
+      policy_arn = aws_iam_policy.DynamoDb-ewqh_iam_policy0.arn
+      role = aws_iam_role.Instance-ebvr_iam_role.name
+}
+
 resource "aws_subnet" "devxp_vpc_subnet_public0" {
       vpc_id = aws_vpc.devxp_vpc.id
       cidr_block = "10.0.0.0/25"
@@ -224,6 +278,32 @@ resource "aws_security_group" "devxp_security_group" {
         to_port = 443
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
+      }
+}
+
+data "aws_iam_policy_document" "Instance-ebvr_iam_policy_document" {
+      statement {
+        actions = ["ec2:RunInstances", "ec2:AssociateIamInstanceProfile", "ec2:ReplaceIamInstanceProfileAssociation"]
+        effect = "Allow"
+        resources = ["arn:aws:ec2:::*"]
+      }
+      statement {
+        actions = ["iam:PassRole"]
+        effect = "Allow"
+        resources = [aws_instance.Instance-ebvr.arn]
+      }
+}
+
+data "aws_ami" "ubuntu_latest" {
+      most_recent = true
+      owners = ["099720109477"]
+      filter {
+        name = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"]
+      }
+      filter {
+        name = "virtualization-type"
+        values = ["hvm"]
       }
 }
 
@@ -297,4 +377,8 @@ data "aws_iam_policy_document" "lambda-create-account-vpc-policy-document" {
 }
 
 
+output "Instance-ebvr_eip-public-ip" {
+    value = aws_eip.Instance-ebvr_eip.public_ip
+    sensitive = false
+}
 
